@@ -207,22 +207,36 @@ world:[
  {id:"w9",name:"終末世界",group:"postapo",prompt:"a quiet post-apocalyptic world, abandoned urban scenery"}
 ],
 hairColor:[
- {id:"hc1",name:"淡いプラチナベージュ",prompt:"soft pale platinum beige hair"},
- {id:"hc2",name:"シルバーグレー",prompt:"muted silver gray hair"},
- {id:"hc3",name:"アッシュブラウン",prompt:"cool ash brown hair"},
- {id:"hc4",name:"ダークアッシュ",prompt:"deep dark ash brown hair"},
- {id:"hc5",name:"ブルーブラック",prompt:"soft blue-black hair"},
- {id:"hc6",name:"スモーキーブルー",prompt:"muted smoky blue hair"},
- {id:"hc7",name:"淡いアッシュブルー",prompt:"pale ash blue hair"},
- {id:"hc8",name:"ラベンダーグレー",prompt:"muted lavender gray hair"},
- {id:"hc9",name:"ダスティピンク",prompt:"soft dusty pink hair"},
- {id:"hc10",name:"ワインレッド",prompt:"deep muted wine red hair"},
- {id:"hc11",name:"柔らかな黒髪",prompt:"soft natural black hair"},
- {id:"hc12",name:"ミルクティーベージュ",prompt:"muted milk tea beige hair"},
- {id:"hc13",name:"グレージュ",prompt:"cool greige hair"},
- {id:"hc14",name:"淡いミントグレー",prompt:"pale muted mint gray hair"},
- {id:"hc15",name:"スモーキーパープル",prompt:"smoky muted purple hair"},
- {id:"hc16",name:"ダークブラウン",prompt:"deep natural dark brown hair"}
+ {id:"hc1",name:"ナチュラルブラック",prompt:"natural soft black hair"},
+ {id:"hc2",name:"ブルーブラック",prompt:"blue-black hair with a subtle cool sheen"},
+ {id:"hc3",name:"ダークアッシュ",prompt:"deep dark ash brown hair"},
+ {id:"hc4",name:"アッシュブラウン",prompt:"cool ash brown hair"},
+ {id:"hc5",name:"ミルクティーベージュ",prompt:"muted milk tea beige hair"},
+ {id:"hc6",name:"グレージュ",prompt:"cool greige hair"},
+ {id:"hc7",name:"プラチナブロンド",prompt:"pale platinum blonde hair"},
+ {id:"hc8",name:"シルバーグレー",prompt:"muted silver gray hair"},
+ {id:"hc9",name:"スモーキーブルー",prompt:"muted smoky blue hair"},
+ {id:"hc10",name:"アッシュブルー",prompt:"pale ash blue hair"},
+ {id:"hc11",name:"ラベンダーグレー",prompt:"muted lavender gray hair"},
+ {id:"hc12",name:"スモーキーパープル",prompt:"smoky muted purple hair"},
+ {id:"hc13",name:"ダスティピンク",prompt:"soft dusty pink hair"},
+ {id:"hc14",name:"ワインレッド",prompt:"deep muted wine red hair"},
+ {id:"hc15",name:"ダークブラウン",prompt:"deep natural dark brown hair"},
+ {id:"hc16",name:"グレーブラウン",prompt:"muted gray brown hair"},
+ {id:"hc17",name:"ブラック→シルバーグラデ",prompt:"black hair fading gradually into silver gray at the ends"},
+ {id:"hc18",name:"ダークブラウン→ベージュグラデ",prompt:"dark brown hair with a soft beige gradient toward the ends"},
+ {id:"hc19",name:"アッシュブラウン→グレージュ",prompt:"ash brown hair fading into cool greige at the tips"},
+ {id:"hc20",name:"ブルーブラック→ブルー",prompt:"blue-black hair with a subtle deep blue gradient"},
+ {id:"hc21",name:"シルバー→ラベンダー",prompt:"silver gray hair with a pale lavender gradient at the ends"},
+ {id:"hc22",name:"プラチナ→ペールブルー",prompt:"platinum blonde hair fading into pale icy blue"},
+ {id:"hc23",name:"グレージュ→スモーキーピンク",prompt:"greige hair with a muted smoky pink gradient"},
+ {id:"hc24",name:"ブラック→ワインレッド",prompt:"black hair fading into deep wine red at the ends"},
+ {id:"hc25",name:"黒髪＋シルバーインナー",prompt:"natural black hair with hidden silver gray inner-color sections"},
+ {id:"hc26",name:"アッシュ＋ブルーインナー",prompt:"ash brown hair with muted blue inner-color sections"},
+ {id:"hc27",name:"ベージュ＋ラベンダーインナー",prompt:"beige hair with pale lavender inner-color sections"},
+ {id:"hc28",name:"シルバー＋ブルーの毛先",prompt:"silver gray hair with distinct muted blue tips"},
+ {id:"hc29",name:"ダークカラー＋フェイスフレーミング",prompt:"dark hair with subtle lighter face-framing highlights"},
+ {id:"hc30",name:"淡いツートーン",prompt:"soft two-tone hair combining pale platinum beige and muted lavender"}
 ],
 hairstyle:[
  ["ふわふわマッシュ","a soft fluffy mash haircut, airy rounded silhouette and separated fringe"],
@@ -266,25 +280,31 @@ hairstyle:[
  ["センター分けロング","long center-parted hair with smooth face-framing strands"],
  ["無造作ロング","loosely tousled long hair with irregular soft layers"]
 ].map((x,i)=>({id:"hs"+(i+1),name:x[0],prompt:x[1]})),
-face:[
- {id:"f1",name:"端正な卵型・切れ長",prompt:"a refined oval face, slim V-shaped jawline, elongated almond-shaped eyes and elegant straight eyebrows"},
- {id:"f2",name:"シャープな輪郭",prompt:"sharp angular facial structure, a defined jawline, prominent cheekbones and narrow eyes"},
- {id:"f3",name:"柔らかな卵型",prompt:"soft balanced oval facial features, a delicate jawline and gently shaped eyes"},
- {id:"f4",name:"中性的で繊細",prompt:"delicate androgynous facial structure, fine features, a small nose and slender jawline"},
- {id:"f5",name:"少年らしさの残る顔",prompt:"youthful handsome facial features, softly rounded cheeks and gentle proportions"},
- {id:"f6",name:"大人びた面長",prompt:"a mature slightly long face, defined cheekbones and a straight nose"},
- {id:"f7",name:"涼しげな目元",prompt:"narrow calm eyes, clean eyelid definition and straight eyebrows"},
- {id:"f8",name:"アンニュイな伏し目",prompt:"half-lidded downcast eyes, relaxed eyelids and a languid expression"},
- {id:"f9",name:"甘く柔らかな目元",prompt:"softly shaped eyes, gently curved eyebrows and delicate youthful features"},
- {id:"f10",name:"鋭く挑発的な目元",prompt:"slightly upturned sharp eyes, defined eyebrows and a confident expression"},
- {id:"f11",name:"眠たげな垂れ目",prompt:"relaxed downturned eyes, soft eyelids and a sleepy gentle expression"},
- {id:"f12",name:"知的で整った顔立ち",prompt:"well-balanced symmetrical features, defined eyelid creases and neat eyebrows"},
- {id:"f13",name:"彫りの深い骨格",prompt:"defined facial planes, a strong nose bridge and prominent cheekbones"},
- {id:"f14",name:"小顔で華奢な造形",prompt:"a small delicate face, fine bone structure and a narrow jaw"},
- {id:"f15",name:"凛とした眉と目元",prompt:"clean strong eyebrows, focused almond-shaped eyes and a dignified expression"},
- {id:"f16",name:"退廃的で影のある顔",prompt:"lean angular features, slightly hollow cheeks and deep-set eyes"},
- {id:"f17",name:"優しげな垂れ目",prompt:"gentle downturned eyes, softly curved eyebrows and warm features"},
- {id:"f18",name:"気品のある王子系",prompt:"elegant symmetrical facial features, graceful jawline and noble bearing"}
+faceShape:[
+ {id:"fs1",name:"卵型",prompt:"a balanced oval face shape"},
+ {id:"fs2",name:"面長",prompt:"a slightly long and elegant face shape"},
+ {id:"fs3",name:"シャープなVライン",prompt:"a slim sharply defined V-shaped jawline"},
+ {id:"fs4",name:"小顔で華奢",prompt:"a small delicate face with fine bone structure"},
+ {id:"fs5",name:"骨格がはっきりした輪郭",prompt:"defined cheekbones and a clearly structured jawline"},
+ {id:"fs6",name:"柔らかな丸みのある輪郭",prompt:"soft gently rounded facial contours"},
+ {id:"fs7",name:"中性的な輪郭",prompt:"a delicate androgynous face shape with subtle jaw definition"},
+ {id:"fs8",name:"大人びた骨格",prompt:"mature facial proportions with subtly prominent cheekbones"},
+ {id:"fs9",name:"少年らしい輪郭",prompt:"youthful soft facial proportions and gently rounded cheeks"},
+ {id:"fs10",name:"細くすっきりした顎",prompt:"a narrow refined chin and clean tapered jawline"}
+],
+eyeShape:[
+ {id:"es1",name:"切れ長",prompt:"slim elongated almond-shaped eyes"},
+ {id:"es2",name:"伏し目・半眼",prompt:"half-lidded downcast eyes"},
+ {id:"es3",name:"垂れ目",prompt:"soft slightly downturned eyes"},
+ {id:"es4",name:"つり目",prompt:"slightly upturned sharp eyes"},
+ {id:"es5",name:"涼しげな細目",prompt:"narrow calm eyes with a cool composed expression"},
+ {id:"es6",name:"丸みのある目",prompt:"gently rounded eyes with soft contours"},
+ {id:"es7",name:"奥二重",prompt:"subtle narrow double eyelids and understated eye definition"},
+ {id:"es8",name:"くっきり二重",prompt:"clearly defined independent double eyelid creases"},
+ {id:"es9",name:"眠たげ",prompt:"relaxed sleepy eyes with lowered upper eyelids"},
+ {id:"es10",name:"鋭く意志の強い目",prompt:"focused sharp eyes with a firm gaze"},
+ {id:"es11",name:"柔らかく甘い目元",prompt:"softly shaped gentle eyes with relaxed eyelids"},
+ {id:"es12",name:"知的で端正な目元",prompt:"precisely shaped almond eyes with clean eyelid definition"}
 ],
 irisColor:[
  {id:"ic1",name:"淡いブルー",prompt:"pale blue irises"},{id:"ic2",name:"アイスブルー",prompt:"icy light blue irises"},
@@ -354,19 +374,17 @@ mood:[
 ]
 };
 
-const MODERN_FORMULAS = [
- ["シャツ＋スラックス","a relaxed button-up shirt, tailored straight-leg slacks and a fine belt"],
- ["ニット＋ワイドスラックス","a fine-gauge knit sweater, flowing wide-leg slacks"],
- ["タートルネック＋ロングコート","a fitted turtleneck, tailored long coat and slim trousers"],
- ["カーディガン＋シャツ","a soft cardigan layered over a crisp shirt with straight-leg trousers"],
- ["テーラードジャケット","an oversized tailored blazer, simple inner shirt and pleated trousers"],
- ["モード・レイヤード","a layered long shirt, asymmetrical outer layer and wide tailored trousers"],
- ["パーカー＋ワイドパンツ","a relaxed hoodie, wide casual trousers and understated sneakers"],
- ["スウェット＋コート","a clean crewneck sweatshirt, long relaxed coat and straight trousers"],
- ["ライダース＋細身パンツ","a minimal biker jacket, plain fitted top and slim trousers"],
- ["デニムジャケット","a clean denim jacket, layered top and relaxed straight jeans"],
- ["ベスト＋シャツ","a tailored vest over a crisp shirt with pleated slacks"],
- ["ロングシャツ＋レイヤード","a longline shirt layered over a fitted inner top with relaxed trousers"]
+const MODERN_STYLES = [
+ ["ミニマル","minimalist menswear"],["きれいめ","refined smart-casual menswear"],
+ ["モード","avant-garde contemporary mode fashion"],["ストリート","relaxed urban streetwear"],
+ ["カジュアル","casual everyday menswear"],["クラシカル","classic tailored menswear"],
+ ["プレッピー","preppy collegiate menswear"],["ロック","subtle rock-inspired menswear"],
+ ["ヴィンテージ","vintage-inspired menswear"],["テックウェア","functional modern techwear"]
+];
+const MODERN_LOOKS = [
+ ["シャツ＋スラックス","a button-up shirt with tailored slacks"],
+ ["ニット＋ワイドパンツ","a fine knit top with wide-leg trousers"],
+ ["ジャケット＋インナー","a structured jacket layered over a simple inner top"]
 ];
 const MODERN_PALETTES = [
  ["ブラック×チャコール","black and charcoal gray"],["ホワイト×グレー","soft white and cool gray"],
@@ -376,22 +394,22 @@ const MODERN_PALETTES = [
  ["セージ×アイボリー","muted sage green and ivory"],["オールブラック","monochromatic black with subtle tonal contrast"]
 ];
 let modernIndex=0;
-for(const [look,items] of MODERN_FORMULAS) for(const [palette,color] of MODERN_PALETTES){
+for(const [style,stylePrompt] of MODERN_STYLES) for(const [look,lookPrompt] of MODERN_LOOKS) for(const [palette,color] of MODERN_PALETTES){
  modernIndex++;
- DEFAULTS.outfit.push({id:"modern_"+modernIndex,name:"現代｜"+look+"｜"+palette,tags:["modern","casual"],prompt:items+", coordinated color palette in "+color+", contemporary menswear styling"});
+ DEFAULTS.outfit.push({id:"modern_"+modernIndex,name:"現代｜"+style+"｜"+look+"｜"+palette,tags:["modern","casual"],prompt:stylePrompt+", "+lookPrompt+", coordinated color palette in "+color+", coherent contemporary outfit"});
 }
-
 const CATEGORY_META = [
  {key:"world",title:"世界観・ジャンル",note:"服装候補と連動"},
  {key:"hairColor",title:"髪色",note:"色味のみ"},
  {key:"hairstyle",title:"髪型",note:"シルエット・前髪・襟足を統合"},
- {key:"face",title:"顔立ち・目元",note:"骨格・目の形・眉・顔の印象"},
+ {key:"faceShape",title:"顔の輪郭・骨格",note:"輪郭と顔全体の骨格"},
+ {key:"eyeShape",title:"目の形",note:"目元の形・まぶた"},
  {key:"irisColor",title:"瞳の色",note:"色だけを独立して抽選"},
  {key:"build",title:"体格",note:"骨格・筋肉・全体のバランス"},
  {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
  {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
 ];
-const STORAGE_KEY="ikemen-gacha-v3";
+const STORAGE_KEY="ikemen-gacha-v4";
 let catalog, selected={}, locked={}, editing=null;
 const $=s=>document.querySelector(s);
 const clone=obj=>JSON.parse(JSON.stringify(obj));
@@ -410,7 +428,11 @@ function load(){
   if(typeof locked[c.key]!=="boolean")locked[c.key]=false;
  }
 }
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify({catalog,selected,locked}));}
+function save(){
+ // iOSのファイルプレビュー等でlocalStorageが利用できなくても、画面描画や抽選を止めない。
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify({catalog,selected,locked}));}
+ catch(e){/* 保存領域が使えない環境では、この画面を開いている間だけメモリ上で保持 */}
+}
 function item(key){return catalog[key].find(x=>x.id===selected[key])||catalog[key][0];}
 function currentWorld(){return item("world");}
 function compatibleOutfits(world=currentWorld()){
@@ -454,7 +476,7 @@ function randomizeAll(){
    selected.world=(pool.length?choose(pool):choose(catalog.world)).id;
   }
  }
- for(const key of ["hairColor","hairstyle","face","irisColor","build","mood"]){
+ for(const key of ["hairColor","hairstyle","faceShape","eyeShape","irisColor","build","mood"]){
   if(!locked[key]){const pool=catalog[key].filter(x=>x.id!==selected[key]);selected[key]=(pool.length?choose(pool):choose(catalog[key])).id;}
  }
  if(!locked.outfit){
@@ -464,11 +486,11 @@ function randomizeAll(){
  save();render();
 }
 function promptText(){
- const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),f=item("face"),ic=item("irisColor"),b=item("build"),o=item("outfit"),m=item("mood");
+ const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),fs=item("faceShape"),es=item("eyeShape"),ic=item("irisColor"),b=item("build"),o=item("outfit"),m=item("mood");
  const parts=[
   "masterpiece, best quality, delicate and beautiful anime illustration, refined 2D anime aesthetic, intricate facial details, nuanced soft shading",
   "a handsome young adult man",
-  w?.prompt,hc?.prompt,hs?.prompt,f?.prompt,ic?.prompt,b?.prompt,o?.prompt,m?.prompt,
+  w?.prompt,hc?.prompt,hs?.prompt,fs?.prompt,es?.prompt,ic?.prompt,b?.prompt,o?.prompt,m?.prompt,
   "harmonious character design, cohesive styling, elegant composition"
  ].filter(Boolean);
  if($("#noHighlights").checked)parts.push("no eye highlights, no catchlights, matte irises, eyes do not reflect light");
