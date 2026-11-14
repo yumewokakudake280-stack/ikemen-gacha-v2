@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#252333">
+<title>イケメンガチャ｜Character Prompt Lab</title>
+<style>
+:root{--bg:#f4f2f7;--card:#fff;--ink:#282536;--muted:#777386;--line:#e4e0eb;--accent:#6d5ba6;--accent2:#e9e3f7;--danger:#a13c54;--shadow:0 8px 28px #2b21400c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f5f2fa,#f7f6f8 55%,#eeeaf5);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.55}
+header{padding:28px 18px 20px;background:#292638;color:#fff}header .inner,main{max-width:1000px;margin:auto}header h1{margin:0;font-size:clamp(23px,5vw,34px);letter-spacing:.02em}header p{margin:7px 0 0;color:#d0cbdc;font-size:14px}
+main{padding:18px 14px 50px}.top-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:12px;font:inherit;font-size:14px;font-weight:650;cursor:pointer}.btn:hover{filter:brightness(.98)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.soft{background:var(--accent2);border-color:var(--accent2);color:#4e417e}.btn.danger{color:var(--danger)}.btn.small{padding:6px 9px;font-size:12px;border-radius:9px}.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b5a7e8;outline-offset:2px}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:15px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:15px}.panel h2{font-size:17px;margin:0 0 12px}.sub{font-size:12px;color:var(--muted);margin:-5px 0 13px}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{border:1px solid var(--line);border-radius:13px;padding:11px;min-width:0;background:#fdfcff}.field-top{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:7px}.field label{font-size:13px;font-weight:750}.lock{border:0;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;padding:3px}.lock.on{color:var(--accent);font-weight:800}.value{font-size:14px;font-weight:650;min-height:43px;display:flex;align-items:center;overflow-wrap:anywhere}.value small{display:block;color:var(--muted);font-weight:400;font-size:11px}.tag{display:inline-block;background:#f0edf7;color:#625486;border-radius:7px;padding:2px 7px;font-size:10px;margin-top:4px}
+.gacha-buttons{display:flex;gap:8px;margin-top:13px}.gacha-buttons .btn{flex:1}.gacha-buttons .primary{font-size:16px;padding:13px}
+.output{width:100%;min-height:205px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfaff;color:#302b3c;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}.output-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.notice{font-size:12px;color:var(--muted);margin-top:10px}
+.category-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.chip{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:white;font-size:12px;cursor:pointer}.chip.active{background:var(--accent2);border-color:#d5c9ef;color:#4d3d7a;font-weight:750}.manage-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.manage-list{display:flex;flex-direction:column;gap:7px;max-height:370px;overflow:auto}.item{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px 9px}.item-text{min-width:0;overflow-wrap:anywhere;font-size:13px}.item-en{display:block;color:var(--muted);font-size:11px}.item-buttons{display:flex;gap:5px;flex-shrink:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.form-grid .wide{grid-column:1/-1}.form-grid label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit;font-size:13px;background:#fff;color:var(--ink)}.empty{color:var(--muted);font-size:13px;padding:12px 0}.footer{color:var(--muted);font-size:11px;text-align:center;padding:10px}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.panel{padding:13px}.field{padding:9px}.gacha-buttons{flex-direction:column}.top-actions .btn{flex:1}}
+@media(max-width:390px){.controls{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div class="inner"><h1>イケメンガチャ</h1><p>CHARACTER PROMPT LAB — パーツを引いて、プロンプトに。</p></div></header>
+<main>
+  <div class="top-actions">
+    <button class="btn" id="exportBtn">データを書き出す</button>
+    <button class="btn" id="importBtn">データを読み込む</button>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+    <button class="btn" id="resetBtn">初期データに戻す</button>
+  </div>
+  <div class="layout">
+    <section>
+      <div class="panel">
+        <h2>キャラクター設定</h2>
+        <p class="sub">鍵マークで項目を固定。固定した項目以外を引き直せます。</p>
+        <div class="controls" id="drawFields"></div>
+        <div class="gacha-buttons">
+          <button class="btn primary" id="drawBtn">🎲 ガチャを回す！</button>
+          <button class="btn soft" id="rerollBtn">固定以外を再抽選</button>
+        </div>
+        <p class="notice">各項目の候補は「候補を編集」から追加・変更できます。設定とデータはこのブラウザ内に保存されます。</p>
+      </div>
+      <div class="panel">
+        <h2>英語プロンプト</h2>
+        <p class="sub">画像生成AIに貼り付けて使うための、外見・衣装中心のプロンプト。</p>
+        <textarea class="output" id="promptOutput" spellcheck="false" aria-label="英語プロンプト"></textarea>
+        <div class="output-actions">
+          <button class="btn primary" id="copyBtn">プロンプトをコピー</button>
+          <button class="btn" id="refreshPromptBtn">設定から再生成</button>
+        </div>
+        <p class="notice" id="copyStatus" aria-live="polite">英語の記述は候補データに登録された内容から組み立てます。</p>
+      </div>
+    </section>
+    <aside>
+      <div class="panel">
+        <div class="manage-head"><h2>候補を編集</h2><span class="tag">自分用</span></div>
+        <p class="sub">カテゴリを選んで、候補を追加・編集・削除できます。</p>
+        <div class="category-row" id="categoryChips"></div>
+        <div class="form-grid">
+          <div class="wide"><label for="jaInput">表示名（日本語）</label><input id="jaInput" placeholder="例：青みがかった黒髪"></div>
+          <div class="wide"><label for="enInput">プロンプト用の英語</label><input id="enInput" placeholder="例：blue-black hair"></div>
+          <div class="wide"><button class="btn primary" id="saveItemBtn">候補を追加</button> <button class="btn" id="cancelEditBtn" hidden>編集をキャンセル</button></div>
+        </div>
+        <div style="height:1px;background:var(--line);margin:14px 0"></div>
+        <div class="manage-head" style="margin-bottom:8px"><strong id="listTitle" style="font-size:13px">候補一覧</strong><span id="countLabel" class="sub" style="margin:0"></span></div>
+        <div class="manage-list" id="manageList"></div>
+      </div>
+      <div class="panel">
+        <h2>使い方</h2>
+        <ol style="font-size:13px;padding-left:19px;margin-bottom:0">
+          <li>ガチャを回して全体を抽選。</li>
+          <li>気に入った項目は鍵マークで固定。</li>
+          <li>候補編集で自分の好みを追加。</li>
+          <li>完成したら英語プロンプトをコピー。</li>
+          <li>「データを書き出す」でバックアップ。</li>
+        </ol>
+        <p class="notice">保存データはこのブラウザ内です。別の端末やブラウザには自動同期されません。</p>
+      </div>
+    </aside>
+  </div>
+  <div class="footer">画像生成・外部AI APIは使用しません。すべての抽選と編集は端末内で動作します。</div>
+</main>
+<script>
+const STORAGE_KEY='ikemenGachaData_v1';
+const defaults={
+ world:[
+ ['現代','modern-day setting'],['現代異能ファンタジー','modern supernatural fantasy setting'],['退廃的な近未来','a decadent near-future setting'],['和風ダークファンタジー','Japanese dark fantasy setting'],['西洋ゴシックファンタジー','Western gothic fantasy setting'],['学園もの','academy setting'],['近未来SF','near-future science fiction setting'],['スチームパンク','steampunk setting'],['現代の裏社会','modern underworld setting'],['架空の王国','a fictional kingdom setting'],['終末世界','post-apocalyptic setting'],['ヴィクトリア朝風','Victorian-inspired setting'],['神話・伝承風','myth-inspired fantasy setting'],['秘密機関・諜報もの','secret-agency espionage setting'],['サイバーパンク','cyberpunk setting'],['中華風ファンタジー','Chinese-inspired fantasy setting']],
+ hairColor:[
+ ['青みがかった黒','blue-black hair'],['赤みのある黒','red-black hair'],['紫がかった黒','black hair with a subtle purple tint'],['灰色がかった黒','soft charcoal-black hair'],['漆黒','jet-black hair'],['シルバーアッシュ','silver ash hair'],['淡いプラチナベージュ','pale platinum beige hair'],['ミルクティーベージュ','milk-tea beige hair'],['グレージュ','greige hair'],['アッシュブラウン','ash brown hair'],['ダークブラウン','dark brown hair'],['赤みブラウン','reddish brown hair'],['ココアブラウン','cocoa brown hair'],['くすみラベンダー','muted lavender hair'],['青みのあるグレー','blue-gray hair'],['スモーキーブルー','smoky blue hair'],['淡いアイスブルー','pale ice-blue hair'],['ネイビー','deep navy hair'],['青紫','blue-violet hair'],['ダークパープル','deep purple hair'],['ワインレッド','wine-red hair'],['くすみローズ','muted rose hair'],['淡いピンクベージュ','pale pink-beige hair'],['ピンクアッシュ','pink ash hair'],['シャンパンブロンド','champagne blonde hair'],['ハニーブロンド','honey blonde hair'],['ホワイトブロンド','white-blonde hair'],['淡いゴールド','pale gold hair'],['アイボリー','ivory hair'],['オリーブアッシュ','olive ash hair'],['深いグリーン','deep green hair'],['ティールブルー','teal-blue hair'],['赤紫','reddish purple hair'],['淡いミントグレー','pale mint-gray hair'],['グラデーション：黒から紫','black-to-purple gradient hair'],['グラデーション：黒からシルバー','black-to-silver gradient hair'],['グラデーション：ネイビーから青','navy-to-blue gradient hair'],['毛先だけ淡い色','subtly lighter-colored hair tips'],['控えめなインナーカラー','subtle inner-color highlights'],['細いシルバーメッシュ','fine silver streaks'],['淡いブルーのメッシュ','pale blue streaks'],['左右で異なる髪色','two-tone hair with different colors on each side']],
+ hairstyle:[
+ ['ふわふわのショートボブ','fluffy short bob haircut'],['丸みのあるマッシュ','rounded mash haircut'],['襟足長めのマッシュ','mash haircut with a longer nape'],['レイヤー入りウルフ','layered wolf cut'],['軽いウルフカット','soft wolf cut'],['無造作な短髪','short tousled hair'],['束感のあるショート','textured short haircut'],['ナチュラルなショートレイヤー','natural short layered haircut'],['長め前髪のショート','short hair with long bangs'],['目にかかる前髪','fringe falling over the eyes'],['斜めに流した前髪','side-swept bangs'],['右寄りの分け目','slightly right-shifted part'],['左寄りの分け目','slightly left-shifted part'],['センターパート','center-parted hair'],['ゆるいウェーブヘア','softly wavy hair'],['くせ毛風のふわふわヘア','fluffy naturally tousled hair'],['外ハネボブ','outward-flipped bob'],['内巻きボブ','inward-curled bob'],['襟足すっきりショート','short haircut with a neat nape'],['長めのレイヤーヘア','long layered hair'],['耳かけショート','short hair tucked behind one ear'],['片目を隠す長め前髪','long bangs covering one eye'],['軽いシースルーバング','light airy bangs'],['重めのぱっつん前髪','heavy blunt-cut bangs'],['短めの不揃い前髪','short uneven bangs'],['ゆるいハーフアップ','loosely tied half-up hair'],['低い位置のひとつ結び','low ponytail'],['後ろでまとめた長髪','long hair tied back'],['編み込みを入れた髪型','hairstyle with subtle braids'],['オールバック','slicked-back hair'],['ラフなかき上げヘア','casually swept-back hair'],['ふんわりした長めマッシュ','fluffy longer mash haircut'],['毛量多めの丸いシルエット','full-volume rounded silhouette'],['軽めで空気感のある毛束','light airy hair strands'],['細い毛束が顔にかかる髪型','fine strands falling around the face'],['襟足に動きのある髪型','hair with movement around the nape'],['ゆるいセンターパートのウェーブ','soft wavy center-parted hair'],['短めのツーブロック','short undercut hairstyle']],
+ eyeColor:[
+ ['淡いグレー','pale gray eyes'],['青みがかったグレー','blue-gray eyes'],['氷のようなブルー','icy blue eyes'],['淡い水色','pale blue eyes'],['くすんだブルー','muted blue eyes'],['深いネイビー','deep navy eyes'],['青紫','blue-violet eyes'],['淡いラベンダー','pale lavender eyes'],['くすんだ紫','muted purple eyes'],['深い紫','deep violet eyes'],['グレージュ','gray-beige eyes'],['淡い琥珀色','pale amber eyes'],['蜂蜜色','honey-colored eyes'],['赤みのある茶色','reddish brown eyes'],['深いブラウン','deep brown eyes'],['黒に近い瞳','near-black eyes'],['深いワインレッド','deep wine-red eyes'],['淡いローズ','pale rose eyes'],['くすんだピンク','muted pink eyes'],['深いグリーン','deep green eyes'],['灰緑色','gray-green eyes'],['淡いミントグリーン','pale mint-green eyes'],['左右で異なる瞳色','heterochromatic eyes']],
+ eyeShape:[
+ ['切れ長のアーモンド形','long almond-shaped eyes'],['やや垂れ目','slightly downturned eyes'],['涼しげな目元','cool, composed eyes'],['重めの上まぶた','heavy upper eyelids'],['細めでアンニュイな目元','narrow, languid eyes'],['鋭い目つき','sharp, intense eyes'],['柔らかい垂れ目','soft downturned eyes'],['半目がちな目元','half-lidded eyes'],['目尻が少し上がった目','slightly upturned outer corners'],['伏し目がちな目元','downcast eyes']],
+ build:[
+ ['長身の細マッチョ','tall and lean with defined muscles'],['華奢で中性的','slender and androgynous'],['肩幅の広い長身','tall with broad shoulders'],['しなやかな細身','slender with a supple build'],['筋肉質でがっしり','solid and muscular build'],['均整の取れた標準体型','well-proportioned average build'],['細身で手足が長い','slim with long limbs'],['厚みのある上半身','broad, substantial upper body'],['引き締まったアスリート体型','lean athletic build'],['小柄で均整の取れた体格','shorter, well-proportioned build'],['長い首と華奢な肩','long neck and delicate shoulders'],['薄い体つきだが腹筋が明確','slim physique with defined abs']],
+ skin:[
+ ['色白','fair skin'],['青みのある色白肌','pale skin with cool undertones'],['ニュートラルな明るい肌','light skin with neutral undertones'],['温かみのある明るい肌','light skin with warm undertones'],['透けるような淡い肌','very pale, translucent-looking skin'],['オリーブ系の肌','olive skin tone'],['健康的な小麦肌','healthy tan skin']],
+ face:[
+ ['短めの中顔面','short midface'],['シャープなVラインの輪郭','sharp V-shaped jawline'],['小さく整った鼻','small, refined nose'],['小さな口元','small, delicate mouth'],['頬骨が控えめな輪郭','subtle cheekbones'],['端正で整った顔立ち','refined, well-balanced facial features'],['中性的で繊細な顔立ち','delicate, androgynous facial features'],['涼しげで大人びた顔立ち','cool, mature facial features'],['少年らしさの残る顔立ち','youthful facial features'],['彫りの深い顔立ち','defined facial structure']],
+ outfit:[
+ ['ダークゴシック','dark gothic fashion'],['上品な軍服','elegant military uniform'],['正統派タキシード','formal tailored tuxedo'],['モード系ブラックコーデ','avant-garde all-black fashion'],['和装と現代服のミックス','fusion of traditional Japanese clothing and modern fashion'],['近未来の戦闘服','futuristic combat uniform'],['クラシカルな貴族服','classic aristocratic attire'],['ロングコート中心の装い','long-coat-centered outfit'],['ミニマルな高級スーツ','minimalist luxury suit'],['学園の正装','formal academy uniform'],['退廃的なレイヤード','decadent layered fashion'],['ストリート系レイヤード','layered streetwear'],['黒シャツと細身のスラックス','black shirt and slim tailored trousers'],['ハイネックとロングコート','high-neck top and long coat'],['装飾的な礼装','ornate ceremonial attire'],['ダークカラーの和装','dark-toned traditional Japanese attire'],['レザーと金属パーツの衣装','leather outfit with metal accents'],['白を基調とした軍礼装','white formal military dress uniform'],['黒を基調とした軍礼装','black formal military dress uniform'],['端正な執事服','elegant butler attire'],['ハイブランド風のモード服','high-fashion designer-inspired outfit'],['シャツとベストのクラシカルコーデ','classic shirt and waistcoat outfit'],['長いマントを合わせた衣装','outfit paired with a long cape'],['近未来のテックウェア','futuristic techwear'],['和風の羽織スタイル','Japanese haori-inspired outfit'],['ベルベット素材の礼装','velvet formalwear'],['ダブルブレストのロングジャケット','double-breasted long jacket'],['繊細なレースを使ったゴシック服','gothic outfit with delicate lace'],['上質なニットとコート','premium knitwear and coat'],['タートルネックとテーラードジャケット','turtleneck and tailored jacket']],
+ clothingColor:[
+ ['黒を基調にした配色','a predominantly black color palette'],['黒とシルバー','black and silver color palette'],['黒と深い紫','black and deep purple color palette'],['グレーと黒','gray and black color palette'],['白とシルバー','white and silver color palette'],['ネイビーと黒','navy and black color palette'],['くすみブルーとグレー','muted blue and gray color palette'],['ワインレッドと黒','wine red and black color palette'],['アイボリーと淡いグレー','ivory and pale gray color palette'],['深いグリーンと黒','deep green and black color palette'],['淡いラベンダーとグレー','pale lavender and gray color palette'],['モノクローム','monochrome color palette'],['低彩度の寒色系','muted cool-toned colors'],['ダークトーンに控えめな金装飾','dark tones with subtle gold accents'],['白と淡いブルー','white and pale blue color palette']],
+ accessories:[
+ ['装飾なし','no visible accessories'],['細いシルバーのチェーン','a fine silver chain'],['小さなイヤーカフ','a small ear cuff'],['黒い手袋','black gloves'],['装飾的なブローチ','an ornate brooch'],['細身のネクタイ','a slim tie'],['リボンタイ','a ribbon tie'],['シルバーの指輪','silver rings'],['控えめな金属装飾','subtle metal embellishments'],['細いベルトとハーネス','slim belt and harness details'],['刺繍入りの襟','an embroidered collar'],['片耳の小さなピアス','a single small earring'],['レースの手袋','lace gloves'],['装飾的な肩章','ornate shoulder epaulettes'],['長いスカーフ','a long scarf'],['細いチョーカー','a slim choker']],
+ expression:[
+ ['気だるげでアンニュイ','languid and melancholic expression'],['冷静で無表情','calm, expressionless face'],['控えめな微笑み','a subtle, restrained smile'],['少し不機嫌そう','slightly displeased expression'],['静かな自信を感じる表情','quietly confident expression'],['物憂げな表情','wistful expression'],['感情を読ませない表情','an unreadable expression'],['柔らかく穏やかな表情','soft and gentle expression'],['鋭く見据える表情','an intense, focused gaze'],['眠たげな半目','sleepy, half-lidded expression']],
+ hairDetail:[
+ ['前髪は目に少しかかる','bangs slightly covering the eyes'],['前髪は眉にかかる長さ','bangs reaching the eyebrows'],['前髪は軽く束になっている','bangs arranged in soft separated strands'],['サイドの毛束が頬に沿う','side locks framing the cheeks'],['耳周りにふわりとした毛束','soft volume around the ears'],['襟足は自然に首に沿う','nape hair naturally following the neck'],['襟足に軽い外ハネ','slightly flipped-out nape hair'],['毛先は柔らかく散る','softly separated hair tips'],['毛量は多め','full hair volume'],['毛量は軽め','light, airy hair volume'],['トップに自然な立体感','natural volume at the crown'],['顔周りに細い後れ毛','fine loose strands around the face'],['片側の髪を耳にかける','hair tucked behind one ear'],['控えめなツヤ感','subtle hair sheen'],['マットな質感','matte hair texture']]
+};
+const fields=[
+ {id:'world',label:'世界観',desc:'世界・舞台'}, {id:'hairColor',label:'髪色',desc:'色・メッシュ・グラデーション'},
+ {id:'hairstyle',label:'髪型',desc:'シルエット・スタイル'}, {id:'hairDetail',label:'髪のディテール',desc:'前髪・襟足・毛量'},
+ {id:'eyeColor',label:'瞳の色',desc:'虹彩の色'}, {id:'eyeShape',label:'目元',desc:'目の形・印象'},
+ {id:'skin',label:'肌色',desc:'肌の色調'}, {id:'face',label:'顔立ち',desc:'輪郭・パーツ'},
+ {id:'build',label:'体格',desc:'身長・筋肉量・骨格'}, {id:'outfit',label:'服装の系統',desc:'衣装・ファッション'},
+ {id:'clothingColor',label:'服の配色',desc:'色・トーン'}, {id:'accessories',label:'装飾',desc:'小物・ディテール'},
+ {id:'expression',label:'表情',desc:'目元・雰囲気'}
+];
+let data=clone(defaults), current={}, locks={}, activeCategory='hairColor', editing=null;
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=JSON.parse(raw);if(parsed&&parsed.data){data=parsed.data;current=parsed.current||{};locks=parsed.locks||{}}}}catch(e){}}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({data,current,locks}))}catch(e){document.getElementById('copyStatus').textContent='ブラウザの保存領域に書き込めませんでした。データを書き出して保存してください。'}}
+function pick(id){const list=data[id]||[];if(!list.length)return {ja:'（候補なし）',en:''};const old=current[id]?.ja;let choices=list.filter(x=>x[0]!==old);if(!choices.length)choices=list;const v=choices[Math.floor(Math.random()*choices.length)];return {ja:v[0],en:v[1]}}
+function initCurrent(){fields.forEach(f=>{if(!current[f.id]||!data[f.id]?.some(x=>x[0]===current[f.id].ja))current[f.id]=pick(f.id)})}
+function renderFields(){const root=document.getElementById('drawFields');root.innerHTML='';fields.forEach(f=>{const item=current[f.id]||{ja:'—',en:''};const div=document.createElement('div');div.className='field';div.innerHTML=`<div class="field-top"><label>${esc(f.label)}</label><button class="lock ${locks[f.id]?'on':''}" data-lock="${f.id}">${locks[f.id]?'🔒 固定中':'🔓 固定する'}</button></div><div class="value">${esc(item.ja)}</div><span class="tag">${esc(f.desc)}</span>`;root.appendChild(div)});root.querySelectorAll('[data-lock]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.lock;locks[id]=!locks[id];persist();renderFields()}));}
+function buildPrompt(){const get=id=>current[id]?.en||'';const parts=[];if(get('world'))parts.push(get('world'));parts.push('one male character design');if(get('hairColor'))parts.push(get('hairColor'));if(get('hairstyle'))parts.push(get('hairstyle'));if(get('hairDetail'))parts.push(get('hairDetail'));if(get('eyeColor'))parts.push(get('eyeColor'));if(get('eyeShape'))parts.push(get('eyeShape'));if(get('skin'))parts.push(get('skin'));if(get('face'))parts.push(get('face'));if(get('build'))parts.push(get('build'));if(get('outfit'))parts.push('wearing '+get('outfit'));if(get('clothingColor'))parts.push(get('clothingColor'));if(get('accessories'))parts.push(get('accessories'));if(get('expression'))parts.push(get('expression'));return parts.filter(Boolean).join(', ')+'.'}
+function refreshPrompt(){document.getElementById('promptOutput').value=buildPrompt();persist()}
+function draw(forceAll=false){fields.forEach(f=>{if(forceAll||!locks[f.id])current[f.id]=pick(f.id)});renderFields();refreshPrompt();document.getElementById('copyStatus').textContent='新しい組み合わせを生成しました。'}
+function renderChips(){const root=document.getElementById('categoryChips');root.innerHTML='';fields.forEach(f=>{const b=document.createElement('button');b.className='chip '+(activeCategory===f.id?'active':'');b.textContent=f.label;b.onclick=()=>{activeCategory=f.id;editing=null;clearForm();renderChips();renderList()};root.appendChild(b)})}
+function renderList(){const arr=data[activeCategory]||[];document.getElementById('listTitle').textContent=(fields.find(f=>f.id===activeCategory)?.label||activeCategory)+' の候補';document.getElementById('countLabel').textContent=arr.length+'件';const root=document.getElementById('manageList');root.innerHTML='';if(!arr.length){root.innerHTML='<div class="empty">候補がありません。上から追加できます。</div>';return}arr.forEach((x,i)=>{const row=document.createElement('div');row.className='item';row.innerHTML=`<div class="item-text">${esc(x[0])}<span class="item-en">${esc(x[1])}</span></div><div class="item-buttons"><button class="btn small" data-edit="${i}">編集</button><button class="btn small danger" data-del="${i}">削除</button></div>`;root.appendChild(row)});root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(Number(b.dataset.edit)));root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.del);if(!confirm(`「${arr[i][0]}」を候補から削除しますか？`))return;arr.splice(i,1);if(current[activeCategory]?.ja===undefined||current[activeCategory]?.ja===arr[i]?.[0])current[activeCategory]=pick(activeCategory);persist();renderList();renderFields();refreshPrompt()})}
+function clearForm(){editing=null;document.getElementById('jaInput').value='';document.getElementById('enInput').value='';document.getElementById('saveItemBtn').textContent='候補を追加';document.getElementById('cancelEditBtn').hidden=true}
+function startEdit(i){editing=i;const x=data[activeCategory][i];document.getElementById('jaInput').value=x[0];document.getElementById('enInput').value=x[1];document.getElementById('saveItemBtn').textContent='変更を保存';document.getElementById('cancelEditBtn').hidden=false;document.getElementById('jaInput').focus()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('drawBtn').onclick=()=>draw(true);
+document.getElementById('rerollBtn').onclick=()=>draw(false);
+document.getElementById('refreshPromptBtn').onclick=refreshPrompt;
+document.getElementById('copyBtn').onclick=async()=>{const text=document.getElementById('promptOutput').value;try{await navigator.clipboard.writeText(text);document.getElementById('copyStatus').textContent='コピーしました！ PixAIなどに貼り付けて使えます。'}catch(e){const t=document.getElementById('promptOutput');t.focus();t.select();try{document.execCommand('copy');document.getElementById('copyStatus').textContent='コピーしました！'}catch(_){document.getElementById('copyStatus').textContent='テキストを選択して手動でコピーしてください。'}}};
+document.getElementById('saveItemBtn').onclick=()=>{const ja=document.getElementById('jaInput').value.trim(),en=document.getElementById('enInput').value.trim();if(!ja||!en){alert('日本語の表示名と英語プロンプトを両方入力してください。');return}const arr=data[activeCategory]||(data[activeCategory]=[]);if(editing!==null){arr[editing]=[ja,en]}else{arr.push([ja,en])}if(!current[activeCategory]||editing===null)current[activeCategory]={ja,en};clearForm();persist();renderList();renderFields();refreshPrompt()};
+document.getElementById('cancelEditBtn').onclick=clearForm;
+document.getElementById('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({data,current,locks},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ikemen-gacha-backup.json';a.click();URL.revokeObjectURL(url)};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!parsed.data||!fields.every(f=>Array.isArray(parsed.data[f.id])))throw Error('形式が違います');if(!confirm('現在の候補と設定を、読み込むデータで置き換えますか？'))return;data=parsed.data;current=parsed.current||{};locks=parsed.locks||{};initCurrent();persist();renderAll()}catch(err){alert('データを読み込めませんでした。イケメンガチャのバックアップJSONか確認してください。')}finally{e.target.value=''}};
+document.getElementById('resetBtn').onclick=()=>{if(!confirm('候補を初期データに戻しますか？ 自分で追加・編集した候補は失われます。先に書き出してバックアップできます。'))return;data=clone(defaults);current={};locks={};initCurrent();persist();renderAll()};
+function renderAll(){renderFields();renderChips();renderList();refreshPrompt()}
+load();initCurrent();renderAll();
+</script>
+</body>
+</html>
