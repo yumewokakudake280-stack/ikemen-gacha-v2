@@ -58,6 +58,9 @@ summary{font-size:11px;color:#b9adc9;cursor:pointer;user-select:none}
 .candidate-actions{display:flex;gap:4px;flex-shrink:0}
 .candidate-actions button{font-size:10px;border:1px solid #5b5366;background:transparent;color:#d5cddd;border-radius:6px;padding:4px 6px}
 .candidate-actions button:hover{background:#423c4e}
+.advanced-tools{margin:0 0 17px;color:#aaa1b5;font-size:11px}
+.advanced-tools summary{display:inline-block;padding:5px 2px;color:#9f96aa}
+.advanced-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px solid #393542;border-radius:10px;background:#211f28}
 .output{margin-top:17px;padding:17px}
 .output-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 h2{font-size:16px;margin:0;font-weight:650}
@@ -107,11 +110,15 @@ dialog::backdrop{background:#09080dbb;backdrop-filter:blur(4px)}
   <section class="toolbar">
     <button class="btn primary" id="allRoll">✦ 全項目を抽選</button>
     <button class="btn" id="unlockAll">固定をすべて解除</button>
-    <span class="spacer"></span>
-    <button class="btn ghost" id="exportBtn">候補を保存（JSON）</button>
-    <button class="btn ghost" id="importBtn">候補を読み込む</button>
-    <input type="file" id="importFile" accept=".json,application/json" hidden>
   </section>
+  <details class="advanced-tools"><summary>候補データ・詳細設定</summary>
+    <div class="advanced-inner">
+      <button class="btn small ghost" id="exportBtn">候補を保存（JSON）</button>
+      <button class="btn small ghost" id="importBtn">候補を読み込む</button>
+      <button class="btn small danger" id="resetDefaults">初期候補に戻す</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </details>
 
   <section class="settings">
     <span class="settings-title">プロンプト設定</span>
@@ -134,7 +141,6 @@ dialog::backdrop{background:#09080dbb;backdrop-filter:blur(4px)}
     <div class="field-label"><span>Negative prompt</span><button class="btn small" id="copyNegative">コピー</button></div>
     <textarea id="negative" spellcheck="false"></textarea>
     <div class="output-actions">
-      <button class="btn" id="resetDefaults">初期候補に戻す</button>
     </div>
   </section>
   <footer>候補と設定はこのブラウザ内に保存されます。JSON保存でバックアップできます。</footer>
@@ -219,36 +225,78 @@ hairColor:[
  {id:"hc16",name:"ダークブラウン",prompt:"deep natural dark brown hair"}
 ],
 hairstyle:[
- {id:"hs1",name:"ふわふわマッシュ",prompt:"a soft fluffy mash haircut, airy rounded silhouette, lightly separated fringe"},
- {id:"hs2",name:"無造作ショート",prompt:"a casually tousled short haircut, loose textured layers and natural fringe"},
- {id:"hs3",name:"センターパート",prompt:"a relaxed center-parted hairstyle, long soft bangs framing the face"},
- {id:"hs4",name:"七三寄りのサイドパート",prompt:"a soft side-parted hairstyle, diagonal fringe and neat tapered sides"},
- {id:"hs5",name:"ウルフカット",prompt:"a layered wolf cut, textured crown, long nape and feathered fringe"},
- {id:"hs6",name:"長めのレイヤー",prompt:"medium-length layered hair, soft movement and face-framing strands"},
- {id:"hs7",name:"襟足長めのショート",prompt:"a short layered haircut with a slightly long nape and wispy bangs"},
- {id:"hs8",name:"くせ毛ウェーブ",prompt:"naturally wavy medium-length hair, loose curls and soft volume"},
- {id:"hs9",name:"さらさらストレート",prompt:"smooth straight hair, clean silhouette and long delicate bangs"},
- {id:"hs10",name:"長髪・低い位置で結ぶ",prompt:"long hair tied loosely at the nape, a few strands falling around the face"},
- {id:"hs11",name:"オールバック",prompt:"a loose swept-back hairstyle, textured volume and an understated shape"},
- {id:"hs12",name:"コンパクトなベリーショート",prompt:"a neat very short haircut, close-cropped sides and a softly textured top"},
- {id:"hs13",name:"前下がりボブ",prompt:"a masculine forward-sloping bob, layered ends and long framing fringe"},
- {id:"hs14",name:"外ハネミディアム",prompt:"a medium-length layered hairstyle with softly flipped-out ends"}
+ ["ふわふわマッシュ","a soft fluffy mash haircut, airy rounded silhouette and separated fringe"],
+ ["重めマッシュ","a full rounded mash haircut, dense straight fringe and curved sides"],
+ ["マッシュウルフ","a mash wolf cut, rounded crown, layered sides and long nape"],
+ ["無造作ショート","a casually tousled short haircut with loose textured layers"],
+ ["束感ショート","a short textured haircut with separated piecey strands"],
+ ["ベリーショート","a neat very short haircut, close-cropped sides and textured top"],
+ ["クロップカット","a modern crop haircut, short textured top and compact straight fringe"],
+ ["ツーブロック","a layered two-block haircut, short sides and longer textured top"],
+ ["刈り上げショート","a clean undercut with a softly textured top and tapered sides"],
+ ["七三サイドパート","a neat side-parted hairstyle with diagonal fringe"],
+ ["センターパート","a relaxed center-parted hairstyle with long soft face-framing bangs"],
+ ["カーテンバング","soft curtain bangs parted loosely, face-framing layers and natural volume"],
+ ["前下がりショート","a forward-sloping short haircut, longer front strands and clean nape"],
+ ["前下がりボブ","a masculine forward-sloping bob with layered ends"],
+ ["ウルフカット","a layered wolf cut, textured crown, long nape and feathered fringe"],
+ ["ネオウルフ","a modern soft wolf cut with airy crown layers and wispy long nape"],
+ ["ハッシュカット","a soft hush cut with face-framing layers and feathered ends"],
+ ["シャギーミディアム","a shaggy medium haircut with choppy layers and airy ends"],
+ ["レイヤーミディアム","medium-length layered hair with soft movement"],
+ ["外ハネミディアム","a medium layered hairstyle with softly flipped-out ends"],
+ ["くせ毛ウェーブ","naturally wavy medium-length hair with loose curls"],
+ ["ゆるいパーマ","a loose perm with soft flowing waves and textured volume"],
+ ["強めカール","defined loose curls with abundant texture and rounded volume"],
+ ["さらさらストレート","smooth straight hair with a clean silhouette and delicate bangs"],
+ ["目隠れヘア","long asymmetrical fringe partially covering one eye"],
+ ["重め長めバング","long heavy fringe grazing the eyebrows"],
+ ["シースルーバング","light see-through fringe with separated wispy strands"],
+ ["アシンメトリー","an asymmetrical haircut with uneven fringe lengths"],
+ ["長髪ストレート","long straight hair falling past the shoulders"],
+ ["ロングレイヤー","long layered hair with flowing movement and tapered ends"],
+ ["低い位置でひとつ結び","long hair tied loosely in a low ponytail"],
+ ["ハーフアップ","medium-long hair styled in a half-up tie"],
+ ["低めお団子","long hair gathered into a loose low bun"],
+ ["編み込みアレンジ","long hair with subtle side braids woven into flowing layers"],
+ ["オールバック","a loose swept-back hairstyle with textured volume"],
+ ["かき上げ前髪","a swept-up fringe with natural lift and side volume"],
+ ["長め襟足ショート","a short layered haircut with a slightly long nape"],
+ ["コンマヘア","a comma hairstyle with a curved front fringe"],
+ ["センター分けロング","long center-parted hair with smooth face-framing strands"],
+ ["無造作ロング","loosely tousled long hair with irregular soft layers"]
+].map((x,i)=>({id:"hs"+(i+1),name:x[0],prompt:x[1]})),
+face:[
+ {id:"f1",name:"端正な卵型・切れ長",prompt:"a refined oval face, slim V-shaped jawline, elongated almond-shaped eyes and elegant straight eyebrows"},
+ {id:"f2",name:"シャープな輪郭",prompt:"sharp angular facial structure, a defined jawline, prominent cheekbones and narrow eyes"},
+ {id:"f3",name:"柔らかな卵型",prompt:"soft balanced oval facial features, a delicate jawline and gently shaped eyes"},
+ {id:"f4",name:"中性的で繊細",prompt:"delicate androgynous facial structure, fine features, a small nose and slender jawline"},
+ {id:"f5",name:"少年らしさの残る顔",prompt:"youthful handsome facial features, softly rounded cheeks and gentle proportions"},
+ {id:"f6",name:"大人びた面長",prompt:"a mature slightly long face, defined cheekbones and a straight nose"},
+ {id:"f7",name:"涼しげな目元",prompt:"narrow calm eyes, clean eyelid definition and straight eyebrows"},
+ {id:"f8",name:"アンニュイな伏し目",prompt:"half-lidded downcast eyes, relaxed eyelids and a languid expression"},
+ {id:"f9",name:"甘く柔らかな目元",prompt:"softly shaped eyes, gently curved eyebrows and delicate youthful features"},
+ {id:"f10",name:"鋭く挑発的な目元",prompt:"slightly upturned sharp eyes, defined eyebrows and a confident expression"},
+ {id:"f11",name:"眠たげな垂れ目",prompt:"relaxed downturned eyes, soft eyelids and a sleepy gentle expression"},
+ {id:"f12",name:"知的で整った顔立ち",prompt:"well-balanced symmetrical features, defined eyelid creases and neat eyebrows"},
+ {id:"f13",name:"彫りの深い骨格",prompt:"defined facial planes, a strong nose bridge and prominent cheekbones"},
+ {id:"f14",name:"小顔で華奢な造形",prompt:"a small delicate face, fine bone structure and a narrow jaw"},
+ {id:"f15",name:"凛とした眉と目元",prompt:"clean strong eyebrows, focused almond-shaped eyes and a dignified expression"},
+ {id:"f16",name:"退廃的で影のある顔",prompt:"lean angular features, slightly hollow cheeks and deep-set eyes"},
+ {id:"f17",name:"優しげな垂れ目",prompt:"gentle downturned eyes, softly curved eyebrows and warm features"},
+ {id:"f18",name:"気品のある王子系",prompt:"elegant symmetrical facial features, graceful jawline and noble bearing"}
 ],
-faceEyes:[
- {id:"fe1",name:"アンニュイな伏し目",prompt:"refined delicate facial features, half-lidded downcast eyes, pale blue irises, a languid and wistful gaze"},
- {id:"fe2",name:"切れ長の涼しい目元",prompt:"a slim V-shaped jawline, narrow elongated eyes, cool gray irises, a composed gaze"},
- {id:"fe3",name:"柔らかく甘い目元",prompt:"a delicate youthful face, softly shaped eyes, muted lavender irises, a gentle and slightly wistful gaze"},
- {id:"fe4",name:"鋭く静かな目元",prompt:"sharp elegant facial features, subtly upturned narrow eyes, dark blue irises, a quiet intense gaze"},
- {id:"fe5",name:"眠たげな垂れ目",prompt:"soft facial contours, relaxed slightly downturned eyes, smoky brown irises, a sleepy expression"},
- {id:"fe6",name:"知的で端正な顔立ち",prompt:"a well-balanced refined face, clear defined eyelids, narrow gray-green eyes, an intelligent gaze"},
- {id:"fe7",name:"儚げで中性的",prompt:"a delicate androgynous face, large but subdued eyes, pale lilac irises, a fragile ethereal gaze"},
- {id:"fe8",name:"大人びた切れ長の瞳",prompt:"mature elegant facial features, elongated half-lidded eyes, muted amber irises, a restrained gaze"},
- {id:"fe9",name:"無表情で静かな顔",prompt:"a calm symmetrical face, straight eyebrows, quiet narrow eyes, desaturated blue-gray irises, an unreadable expression"},
- {id:"fe10",name:"少し生意気な目元",prompt:"a handsome youthful face, slightly sharp eyes, muted olive irises, a faintly challenging gaze"},
- {id:"fe11",name:"優しげな垂れ目",prompt:"soft handsome facial features, gentle downturned eyes, warm gray-brown irises, a tender gaze"},
- {id:"fe12",name:"退廃的で鋭い顔立ち",prompt:"lean angular facial features, deep-set narrow eyes, dark wine-colored irises, a decadent and distant gaze"},
- {id:"fe13",name:"端正な王子系",prompt:"elegant symmetrical facial features, refined almond-shaped eyes, pale golden irises, a noble composed gaze"},
- {id:"fe14",name:"幼さの残る顔立ち",prompt:"soft youthful facial features, clear rounded eyes, muted blue-green irises, an innocent yet reserved gaze"}
+irisColor:[
+ {id:"ic1",name:"淡いブルー",prompt:"pale blue irises"},{id:"ic2",name:"アイスブルー",prompt:"icy light blue irises"},
+ {id:"ic3",name:"ブルーグレー",prompt:"muted blue-gray irises"},{id:"ic4",name:"スモーキーブルー",prompt:"smoky desaturated blue irises"},
+ {id:"ic5",name:"淡いグレー",prompt:"pale silver-gray irises"},{id:"ic6",name:"ダークグレー",prompt:"deep charcoal gray irises"},
+ {id:"ic7",name:"グレイッシュグリーン",prompt:"muted gray-green irises"},{id:"ic8",name:"オリーブ",prompt:"muted olive-green irises"},
+ {id:"ic9",name:"淡いラベンダー",prompt:"pale lavender irises"},{id:"ic10",name:"バイオレット",prompt:"muted violet irises"},
+ {id:"ic11",name:"アッシュブラウン",prompt:"cool ash-brown irises"},{id:"ic12",name:"琥珀",prompt:"soft amber irises"},
+ {id:"ic13",name:"淡いゴールド",prompt:"pale muted golden irises"},{id:"ic14",name:"ワインレッド",prompt:"deep muted wine-red irises"},
+ {id:"ic15",name:"ダークブラウン",prompt:"deep dark brown irises"},{id:"ic16",name:"黒に近い色",prompt:"near-black irises"},
+ {id:"ic17",name:"淡いピンク",prompt:"pale dusty rose irises"},{id:"ic18",name:"青緑",prompt:"muted blue-green irises"},
+ {id:"ic19",name:"ヘーゼル",prompt:"soft hazel irises"},{id:"ic20",name:"左右で異なる色",prompt:"subtle heterochromia, one pale blue iris and one muted gray iris"}
 ],
 build:[
  {id:"b1",name:"細身・華奢",prompt:"a slender delicate build, narrow shoulders and long limbs"},
@@ -306,16 +354,44 @@ mood:[
 ]
 };
 
+const MODERN_FORMULAS = [
+ ["シャツ＋スラックス","a relaxed button-up shirt, tailored straight-leg slacks and a fine belt"],
+ ["ニット＋ワイドスラックス","a fine-gauge knit sweater, flowing wide-leg slacks"],
+ ["タートルネック＋ロングコート","a fitted turtleneck, tailored long coat and slim trousers"],
+ ["カーディガン＋シャツ","a soft cardigan layered over a crisp shirt with straight-leg trousers"],
+ ["テーラードジャケット","an oversized tailored blazer, simple inner shirt and pleated trousers"],
+ ["モード・レイヤード","a layered long shirt, asymmetrical outer layer and wide tailored trousers"],
+ ["パーカー＋ワイドパンツ","a relaxed hoodie, wide casual trousers and understated sneakers"],
+ ["スウェット＋コート","a clean crewneck sweatshirt, long relaxed coat and straight trousers"],
+ ["ライダース＋細身パンツ","a minimal biker jacket, plain fitted top and slim trousers"],
+ ["デニムジャケット","a clean denim jacket, layered top and relaxed straight jeans"],
+ ["ベスト＋シャツ","a tailored vest over a crisp shirt with pleated slacks"],
+ ["ロングシャツ＋レイヤード","a longline shirt layered over a fitted inner top with relaxed trousers"]
+];
+const MODERN_PALETTES = [
+ ["ブラック×チャコール","black and charcoal gray"],["ホワイト×グレー","soft white and cool gray"],
+ ["ネイビー×グレー","deep navy and muted gray"],["グレージュ×アイボリー","greige and warm ivory"],
+ ["ダスティブルー×黒","dusty blue and black"],["ラベンダーグレー×白","lavender gray and soft white"],
+ ["ボルドー×黒","muted wine burgundy and black"],["ブラウン×ベージュ","smoky brown and beige"],
+ ["セージ×アイボリー","muted sage green and ivory"],["オールブラック","monochromatic black with subtle tonal contrast"]
+];
+let modernIndex=0;
+for(const [look,items] of MODERN_FORMULAS) for(const [palette,color] of MODERN_PALETTES){
+ modernIndex++;
+ DEFAULTS.outfit.push({id:"modern_"+modernIndex,name:"現代｜"+look+"｜"+palette,tags:["modern","casual"],prompt:items+", coordinated color palette in "+color+", contemporary menswear styling"});
+}
+
 const CATEGORY_META = [
  {key:"world",title:"世界観・ジャンル",note:"服装候補と連動"},
  {key:"hairColor",title:"髪色",note:"色味のみ"},
  {key:"hairstyle",title:"髪型",note:"シルエット・前髪・襟足を統合"},
- {key:"faceEyes",title:"顔立ち・瞳",note:"顔・目元・瞳色をひとまとめ"},
+ {key:"face",title:"顔立ち・目元",note:"骨格・目の形・眉・顔の印象"},
+ {key:"irisColor",title:"瞳の色",note:"色だけを独立して抽選"},
  {key:"build",title:"体格",note:"骨格・筋肉・全体のバランス"},
  {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
  {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
 ];
-const STORAGE_KEY="ikemen-gacha-v2";
+const STORAGE_KEY="ikemen-gacha-v3";
 let catalog, selected={}, locked={}, editing=null;
 const $=s=>document.querySelector(s);
 const clone=obj=>JSON.parse(JSON.stringify(obj));
@@ -378,7 +454,7 @@ function randomizeAll(){
    selected.world=(pool.length?choose(pool):choose(catalog.world)).id;
   }
  }
- for(const key of ["hairColor","hairstyle","faceEyes","build","mood"]){
+ for(const key of ["hairColor","hairstyle","face","irisColor","build","mood"]){
   if(!locked[key]){const pool=catalog[key].filter(x=>x.id!==selected[key]);selected[key]=(pool.length?choose(pool):choose(catalog[key])).id;}
  }
  if(!locked.outfit){
@@ -388,11 +464,11 @@ function randomizeAll(){
  save();render();
 }
 function promptText(){
- const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),fe=item("faceEyes"),b=item("build"),o=item("outfit"),m=item("mood");
+ const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),f=item("face"),ic=item("irisColor"),b=item("build"),o=item("outfit"),m=item("mood");
  const parts=[
   "masterpiece, best quality, delicate and beautiful anime illustration, refined 2D anime aesthetic, intricate facial details, nuanced soft shading",
   "a handsome young adult man",
-  w?.prompt,hc?.prompt,hs?.prompt,fe?.prompt,b?.prompt,o?.prompt,m?.prompt,
+  w?.prompt,hc?.prompt,hs?.prompt,f?.prompt,ic?.prompt,b?.prompt,o?.prompt,m?.prompt,
   "harmonious character design, cohesive styling, elegant composition"
  ].filter(Boolean);
  if($("#noHighlights").checked)parts.push("no eye highlights, no catchlights, matte irises, eyes do not reflect light");
@@ -436,8 +512,8 @@ function render(){
    </div>
    <p class="result-name">${escapeHTML(cur?.name||"未選択")}</p>
    <p class="result-prompt">${escapeHTML(cur?.prompt||"")}</p>
-   <div class="card-foot"><span class="count">${list.length}候補 · ${escapeHTML(meta.note)}</span><button class="btn small" data-add="${meta.key}">＋ 候補を追加</button></div>
-   <details><summary>候補一覧・編集</summary><div class="candidate-list">${candidates||'<p class="empty">候補がありません。</p>'}</div></details>
+   <div class="card-foot"><span class="count">${list.length}候補 · ${escapeHTML(meta.note)}</span></div>
+   <details><summary>候補一覧・編集</summary><div class="candidate-list"><button class="btn small" data-add="${meta.key}">＋ 候補を追加</button>${candidates||'<p class="empty">候補がありません。</p>'}</div></details>
   </section>`;
  }).join("");
  updatePrompts();
