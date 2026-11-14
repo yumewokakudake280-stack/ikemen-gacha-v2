@@ -1,150 +1,550 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#252333">
-<title>イケメンガチャ｜Character Prompt Lab</title>
+<meta name="theme-color" content="#24212d">
+<title>イケメンガチャ｜Prompt Maker</title>
 <style>
-:root{--bg:#f4f2f7;--card:#fff;--ink:#282536;--muted:#777386;--line:#e4e0eb;--accent:#6d5ba6;--accent2:#e9e3f7;--danger:#a13c54;--shadow:0 8px 28px #2b21400c}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f5f2fa,#f7f6f8 55%,#eeeaf5);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.55}
-header{padding:28px 18px 20px;background:#292638;color:#fff}header .inner,main{max-width:1000px;margin:auto}header h1{margin:0;font-size:clamp(23px,5vw,34px);letter-spacing:.02em}header p{margin:7px 0 0;color:#d0cbdc;font-size:14px}
-main{padding:18px 14px 50px}.top-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:12px;font:inherit;font-size:14px;font-weight:650;cursor:pointer}.btn:hover{filter:brightness(.98)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.soft{background:var(--accent2);border-color:var(--accent2);color:#4e417e}.btn.danger{color:var(--danger)}.btn.small{padding:6px 9px;font-size:12px;border-radius:9px}.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b5a7e8;outline-offset:2px}
-.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:15px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:15px}.panel h2{font-size:17px;margin:0 0 12px}.sub{font-size:12px;color:var(--muted);margin:-5px 0 13px}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{border:1px solid var(--line);border-radius:13px;padding:11px;min-width:0;background:#fdfcff}.field-top{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:7px}.field label{font-size:13px;font-weight:750}.lock{border:0;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;padding:3px}.lock.on{color:var(--accent);font-weight:800}.value{font-size:14px;font-weight:650;min-height:43px;display:flex;align-items:center;overflow-wrap:anywhere}.value small{display:block;color:var(--muted);font-weight:400;font-size:11px}.tag{display:inline-block;background:#f0edf7;color:#625486;border-radius:7px;padding:2px 7px;font-size:10px;margin-top:4px}
-.gacha-buttons{display:flex;gap:8px;margin-top:13px}.gacha-buttons .btn{flex:1}.gacha-buttons .primary{font-size:16px;padding:13px}
-.output{width:100%;min-height:205px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfaff;color:#302b3c;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}.output-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.notice{font-size:12px;color:var(--muted);margin-top:10px}
-.category-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.chip{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:white;font-size:12px;cursor:pointer}.chip.active{background:var(--accent2);border-color:#d5c9ef;color:#4d3d7a;font-weight:750}.manage-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.manage-list{display:flex;flex-direction:column;gap:7px;max-height:370px;overflow:auto}.item{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px 9px}.item-text{min-width:0;overflow-wrap:anywhere;font-size:13px}.item-en{display:block;color:var(--muted);font-size:11px}.item-buttons{display:flex;gap:5px;flex-shrink:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.form-grid .wide{grid-column:1/-1}.form-grid label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit;font-size:13px;background:#fff;color:var(--ink)}.empty{color:var(--muted);font-size:13px;padding:12px 0}.footer{color:var(--muted);font-size:11px;text-align:center;padding:10px}
-@media(max-width:720px){.layout{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.panel{padding:13px}.field{padding:9px}.gacha-buttons{flex-direction:column}.top-actions .btn{flex:1}}
-@media(max-width:390px){.controls{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}}
+:root{
+  --bg:#17161d;--panel:#24222d;--panel2:#2d2a37;--line:#464150;
+  --text:#f2eff6;--muted:#b7b0c2;--accent:#c7b4df;--accent2:#9180ad;
+  --good:#b8c8bd;--danger:#d69da8;--shadow:0 14px 40px rgba(0,0,0,.22);
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#302b3a 0,#1b1922 42%,var(--bg) 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1180px;margin:0 auto;padding:28px 20px 56px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.eyebrow{color:var(--accent);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+h1{font-size:clamp(25px,4vw,34px);font-weight:650;letter-spacing:.04em;margin:4px 0}
+.subtitle{color:var(--muted);font-size:13px;margin:0}
+.header-mark{color:#9587a9;font-size:28px;letter-spacing:.12em;white-space:nowrap}
+.toolbar,.settings,.output,.category-card{background:rgba(36,34,45,.94);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}
+.toolbar{padding:14px;display:flex;flex-wrap:wrap;gap:9px;margin-bottom:13px}
+.btn{border:1px solid #5a5267;color:var(--text);background:#373241;padding:9px 13px;border-radius:10px;font-size:13px;transition:.15s}
+.btn:hover{background:#464052;border-color:#817395}
+.btn.primary{background:#b8a6d0;border-color:#b8a6d0;color:#211d29;font-weight:700}
+.btn.primary:hover{background:#d0c1e2}
+.btn.ghost{background:transparent}
+.btn.danger{color:#e7b7c0;border-color:#805c68;background:transparent}
+.btn.small{padding:6px 9px;font-size:12px}
+.toolbar .spacer{flex:1}
+.settings{padding:13px 16px;margin-bottom:17px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.settings-title{font-size:12px;color:var(--muted);margin-right:2px}
+.check{display:inline-flex;align-items:center;gap:7px;color:#ddd6e6;font-size:12px;cursor:pointer}
+.check input{accent-color:#b8a6d0;width:15px;height:15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.category-card{padding:15px;min-width:0;box-shadow:0 8px 24px rgba(0,0,0,.13)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.card-title{display:flex;align-items:center;gap:9px;font-weight:650;font-size:15px}
+.num{display:grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#393345;color:var(--accent);font-size:11px}
+.card-actions{display:flex;gap:6px}
+.lock{background:transparent;border:1px solid #625a6d;color:#bfb5ce;border-radius:8px;padding:5px 8px;font-size:11px}
+.lock.active{background:#b8a6d0;color:#231e2a;border-color:#b8a6d0}
+.reroll{background:transparent;border:1px solid #625a6d;color:#d5cadd;border-radius:8px;padding:5px 8px;font-size:11px}
+.result-name{font-size:17px;font-weight:650;margin:0 0 5px;overflow-wrap:anywhere}
+.result-prompt{margin:0;color:#bcb4c7;font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px;padding-top:10px;border-top:1px solid #3c3846}
+.count{font-size:11px;color:#92899d}
+details{margin-top:11px}
+summary{font-size:11px;color:#b9adc9;cursor:pointer;user-select:none}
+.candidate-list{display:grid;gap:7px;margin-top:9px}
+.candidate{border:1px solid #423e4c;background:#292632;padding:9px;border-radius:9px;display:flex;gap:8px;align-items:flex-start}
+.candidate-main{flex:1;min-width:0}
+.candidate-name{font-size:12px;font-weight:650}
+.candidate-prompt{font-size:10px;color:#a9a1b4;overflow-wrap:anywhere;margin-top:2px}
+.candidate-actions{display:flex;gap:4px;flex-shrink:0}
+.candidate-actions button{font-size:10px;border:1px solid #5b5366;background:transparent;color:#d5cddd;border-radius:6px;padding:4px 6px}
+.candidate-actions button:hover{background:#423c4e}
+.output{margin-top:17px;padding:17px}
+.output-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+h2{font-size:16px;margin:0;font-weight:650}
+.output-note{color:var(--muted);font-size:11px;margin:4px 0 12px}
+.field-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#d6cede;margin:11px 0 6px}
+textarea{display:block;width:100%;min-height:102px;resize:vertical;background:#191820;border:1px solid #494352;border-radius:10px;color:#e9e3ef;padding:11px;font-size:12px;line-height:1.65}
+textarea:focus,input:focus,select:focus{outline:2px solid #9884b5;outline-offset:1px}
+.output-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+footer{color:#8f879a;font-size:10px;text-align:center;margin-top:22px}
+dialog{width:min(540px,calc(100% - 28px));border:1px solid #62596d;border-radius:16px;background:#25222e;color:var(--text);padding:0;box-shadow:0 25px 80px #0009}
+dialog::backdrop{background:#09080dbb;backdrop-filter:blur(4px)}
+.modal-head{padding:17px 19px;border-bottom:1px solid #423d4a;display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:15px}
+.modal-body{padding:17px 19px}
+.form-row{display:grid;gap:6px;margin-bottom:13px}
+.form-row label{font-size:12px;color:#c9c1d2}
+.form-row input,.form-row textarea,.form-row select{width:100%;background:#191820;color:var(--text);border:1px solid #4d4658;border-radius:8px;padding:9px;font-size:13px}
+.form-row textarea{min-height:85px}
+.tag-options{display:flex;gap:7px 12px;flex-wrap:wrap;padding:9px;background:#1c1a23;border:1px solid #443e4d;border-radius:8px}
+.modal-foot{padding:13px 19px;border-top:1px solid #423d4a;display:flex;justify-content:flex-end;gap:8px}
+.empty{color:#a9a1b3;font-size:12px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#e4d9ef;color:#26212e;padding:9px 15px;border-radius:9px;font-size:12px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media(max-width:700px){
+ .app{padding:20px 13px 38px}
+ header{align-items:flex-start}
+ .header-mark{font-size:20px}
+ .grid{grid-template-columns:1fr}
+ .toolbar .spacer{display:none}
+ .toolbar .btn{flex:1}
+ .settings{gap:12px}
+ .output-head{align-items:flex-start;flex-direction:column}
+}
 </style>
 </head>
 <body>
-<header><div class="inner"><h1>イケメンガチャ</h1><p>CHARACTER PROMPT LAB — パーツを引いて、プロンプトに。</p></div></header>
-<main>
-  <div class="top-actions">
-    <button class="btn" id="exportBtn">データを書き出す</button>
-    <button class="btn" id="importBtn">データを読み込む</button>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">Character prompt generator</div>
+      <h1>イケメンガチャ</h1>
+      <p class="subtitle">世界観から組み立てる、男性キャラクター用プロンプトメーカー</p>
+    </div>
+    <div class="header-mark">✦ ✧ ✦</div>
+  </header>
+
+  <section class="toolbar">
+    <button class="btn primary" id="allRoll">✦ 全項目を抽選</button>
+    <button class="btn" id="unlockAll">固定をすべて解除</button>
+    <span class="spacer"></span>
+    <button class="btn ghost" id="exportBtn">候補を保存（JSON）</button>
+    <button class="btn ghost" id="importBtn">候補を読み込む</button>
     <input type="file" id="importFile" accept=".json,application/json" hidden>
-    <button class="btn" id="resetBtn">初期データに戻す</button>
-  </div>
-  <div class="layout">
-    <section>
-      <div class="panel">
-        <h2>キャラクター設定</h2>
-        <p class="sub">鍵マークで項目を固定。固定した項目以外を引き直せます。</p>
-        <div class="controls" id="drawFields"></div>
-        <div class="gacha-buttons">
-          <button class="btn primary" id="drawBtn">🎲 ガチャを回す！</button>
-          <button class="btn soft" id="rerollBtn">固定以外を再抽選</button>
-        </div>
-        <p class="notice">各項目の候補は「候補を編集」から追加・変更できます。設定とデータはこのブラウザ内に保存されます。</p>
+  </section>
+
+  <section class="settings">
+    <span class="settings-title">プロンプト設定</span>
+    <label class="check"><input type="checkbox" id="noPiercing" checked> ピアス・タトゥーを除外</label>
+    <label class="check"><input type="checkbox" id="noHighlights"> 瞳のハイライトを入れない</label>
+  </section>
+
+  <main class="grid" id="categoryGrid"></main>
+
+  <section class="output">
+    <div class="output-head">
+      <div>
+        <h2>生成された英語プロンプト</h2>
+        <p class="output-note">PixAIなどに貼り付けて使える形式です。抽選結果を変更すると自動で更新されます。</p>
       </div>
-      <div class="panel">
-        <h2>英語プロンプト</h2>
-        <p class="sub">画像生成AIに貼り付けて使うための、外見・衣装中心のプロンプト。</p>
-        <textarea class="output" id="promptOutput" spellcheck="false" aria-label="英語プロンプト"></textarea>
-        <div class="output-actions">
-          <button class="btn primary" id="copyBtn">プロンプトをコピー</button>
-          <button class="btn" id="refreshPromptBtn">設定から再生成</button>
-        </div>
-        <p class="notice" id="copyStatus" aria-live="polite">英語の記述は候補データに登録された内容から組み立てます。</p>
+      <button class="btn primary" id="copyAll">プロンプトをまとめてコピー</button>
+    </div>
+    <div class="field-label"><span>Positive prompt</span><button class="btn small" id="copyPositive">コピー</button></div>
+    <textarea id="positive" spellcheck="false"></textarea>
+    <div class="field-label"><span>Negative prompt</span><button class="btn small" id="copyNegative">コピー</button></div>
+    <textarea id="negative" spellcheck="false"></textarea>
+    <div class="output-actions">
+      <button class="btn" id="resetDefaults">初期候補に戻す</button>
+    </div>
+  </section>
+  <footer>候補と設定はこのブラウザ内に保存されます。JSON保存でバックアップできます。</footer>
+</div>
+
+<dialog id="editDialog">
+  <form id="editForm" method="dialog">
+    <div class="modal-head">
+      <h2 id="dialogTitle">候補を追加</h2>
+      <button class="btn small ghost" type="button" id="closeDialog">閉じる</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label for="candidateName">候補名（日本語・管理用）</label>
+        <input id="candidateName" maxlength="50" required placeholder="例：淡いプラチナベージュ">
       </div>
-    </section>
-    <aside>
-      <div class="panel">
-        <div class="manage-head"><h2>候補を編集</h2><span class="tag">自分用</span></div>
-        <p class="sub">カテゴリを選んで、候補を追加・編集・削除できます。</p>
-        <div class="category-row" id="categoryChips"></div>
-        <div class="form-grid">
-          <div class="wide"><label for="jaInput">表示名（日本語）</label><input id="jaInput" placeholder="例：青みがかった黒髪"></div>
-          <div class="wide"><label for="enInput">プロンプト用の英語</label><input id="enInput" placeholder="例：blue-black hair"></div>
-          <div class="wide"><button class="btn primary" id="saveItemBtn">候補を追加</button> <button class="btn" id="cancelEditBtn" hidden>編集をキャンセル</button></div>
-        </div>
-        <div style="height:1px;background:var(--line);margin:14px 0"></div>
-        <div class="manage-head" style="margin-bottom:8px"><strong id="listTitle" style="font-size:13px">候補一覧</strong><span id="countLabel" class="sub" style="margin:0"></span></div>
-        <div class="manage-list" id="manageList"></div>
+      <div class="form-row">
+        <label for="candidatePrompt">英語プロンプト</label>
+        <textarea id="candidatePrompt" maxlength="500" required placeholder="例：soft platinum beige hair"></textarea>
       </div>
-      <div class="panel">
-        <h2>使い方</h2>
-        <ol style="font-size:13px;padding-left:19px;margin-bottom:0">
-          <li>ガチャを回して全体を抽選。</li>
-          <li>気に入った項目は鍵マークで固定。</li>
-          <li>候補編集で自分の好みを追加。</li>
-          <li>完成したら英語プロンプトをコピー。</li>
-          <li>「データを書き出す」でバックアップ。</li>
-        </ol>
-        <p class="notice">保存データはこのブラウザ内です。別の端末やブラウザには自動同期されません。</p>
+      <div class="form-row" id="worldGroupRow" hidden>
+        <label for="worldGroup">服装候補との連動分類</label>
+        <select id="worldGroup">
+          <option value="modern">現代・都会</option>
+          <option value="casual">現代・日常</option>
+          <option value="academy">学園</option>
+          <option value="japanese">和風</option>
+          <option value="fantasy">西洋ファンタジー</option>
+          <option value="gothic">ゴシック</option>
+          <option value="scifi">近未来・SF</option>
+          <option value="postapo">終末世界</option>
+        </select>
       </div>
-    </aside>
-  </div>
-  <div class="footer">画像生成・外部AI APIは使用しません。すべての抽選と編集は端末内で動作します。</div>
-</main>
+      <div class="form-row" id="outfitTagsRow" hidden>
+        <label>この服装を抽選対象にする世界観</label>
+        <div class="tag-options" id="outfitTags"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" type="button" id="cancelEdit">キャンセル</button>
+      <button class="btn primary" type="submit" id="saveCandidate">保存</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+
 <script>
-const STORAGE_KEY='ikemenGachaData_v1';
-const defaults={
- world:[
- ['現代','modern-day setting'],['現代異能ファンタジー','modern supernatural fantasy setting'],['退廃的な近未来','a decadent near-future setting'],['和風ダークファンタジー','Japanese dark fantasy setting'],['西洋ゴシックファンタジー','Western gothic fantasy setting'],['学園もの','academy setting'],['近未来SF','near-future science fiction setting'],['スチームパンク','steampunk setting'],['現代の裏社会','modern underworld setting'],['架空の王国','a fictional kingdom setting'],['終末世界','post-apocalyptic setting'],['ヴィクトリア朝風','Victorian-inspired setting'],['神話・伝承風','myth-inspired fantasy setting'],['秘密機関・諜報もの','secret-agency espionage setting'],['サイバーパンク','cyberpunk setting'],['中華風ファンタジー','Chinese-inspired fantasy setting']],
- hairColor:[
- ['青みがかった黒','blue-black hair'],['赤みのある黒','red-black hair'],['紫がかった黒','black hair with a subtle purple tint'],['灰色がかった黒','soft charcoal-black hair'],['漆黒','jet-black hair'],['シルバーアッシュ','silver ash hair'],['淡いプラチナベージュ','pale platinum beige hair'],['ミルクティーベージュ','milk-tea beige hair'],['グレージュ','greige hair'],['アッシュブラウン','ash brown hair'],['ダークブラウン','dark brown hair'],['赤みブラウン','reddish brown hair'],['ココアブラウン','cocoa brown hair'],['くすみラベンダー','muted lavender hair'],['青みのあるグレー','blue-gray hair'],['スモーキーブルー','smoky blue hair'],['淡いアイスブルー','pale ice-blue hair'],['ネイビー','deep navy hair'],['青紫','blue-violet hair'],['ダークパープル','deep purple hair'],['ワインレッド','wine-red hair'],['くすみローズ','muted rose hair'],['淡いピンクベージュ','pale pink-beige hair'],['ピンクアッシュ','pink ash hair'],['シャンパンブロンド','champagne blonde hair'],['ハニーブロンド','honey blonde hair'],['ホワイトブロンド','white-blonde hair'],['淡いゴールド','pale gold hair'],['アイボリー','ivory hair'],['オリーブアッシュ','olive ash hair'],['深いグリーン','deep green hair'],['ティールブルー','teal-blue hair'],['赤紫','reddish purple hair'],['淡いミントグレー','pale mint-gray hair'],['グラデーション：黒から紫','black-to-purple gradient hair'],['グラデーション：黒からシルバー','black-to-silver gradient hair'],['グラデーション：ネイビーから青','navy-to-blue gradient hair'],['毛先だけ淡い色','subtly lighter-colored hair tips'],['控えめなインナーカラー','subtle inner-color highlights'],['細いシルバーメッシュ','fine silver streaks'],['淡いブルーのメッシュ','pale blue streaks'],['左右で異なる髪色','two-tone hair with different colors on each side']],
- hairstyle:[
- ['ふわふわのショートボブ','fluffy short bob haircut'],['丸みのあるマッシュ','rounded mash haircut'],['襟足長めのマッシュ','mash haircut with a longer nape'],['レイヤー入りウルフ','layered wolf cut'],['軽いウルフカット','soft wolf cut'],['無造作な短髪','short tousled hair'],['束感のあるショート','textured short haircut'],['ナチュラルなショートレイヤー','natural short layered haircut'],['長め前髪のショート','short hair with long bangs'],['目にかかる前髪','fringe falling over the eyes'],['斜めに流した前髪','side-swept bangs'],['右寄りの分け目','slightly right-shifted part'],['左寄りの分け目','slightly left-shifted part'],['センターパート','center-parted hair'],['ゆるいウェーブヘア','softly wavy hair'],['くせ毛風のふわふわヘア','fluffy naturally tousled hair'],['外ハネボブ','outward-flipped bob'],['内巻きボブ','inward-curled bob'],['襟足すっきりショート','short haircut with a neat nape'],['長めのレイヤーヘア','long layered hair'],['耳かけショート','short hair tucked behind one ear'],['片目を隠す長め前髪','long bangs covering one eye'],['軽いシースルーバング','light airy bangs'],['重めのぱっつん前髪','heavy blunt-cut bangs'],['短めの不揃い前髪','short uneven bangs'],['ゆるいハーフアップ','loosely tied half-up hair'],['低い位置のひとつ結び','low ponytail'],['後ろでまとめた長髪','long hair tied back'],['編み込みを入れた髪型','hairstyle with subtle braids'],['オールバック','slicked-back hair'],['ラフなかき上げヘア','casually swept-back hair'],['ふんわりした長めマッシュ','fluffy longer mash haircut'],['毛量多めの丸いシルエット','full-volume rounded silhouette'],['軽めで空気感のある毛束','light airy hair strands'],['細い毛束が顔にかかる髪型','fine strands falling around the face'],['襟足に動きのある髪型','hair with movement around the nape'],['ゆるいセンターパートのウェーブ','soft wavy center-parted hair'],['短めのツーブロック','short undercut hairstyle']],
- eyeColor:[
- ['淡いグレー','pale gray eyes'],['青みがかったグレー','blue-gray eyes'],['氷のようなブルー','icy blue eyes'],['淡い水色','pale blue eyes'],['くすんだブルー','muted blue eyes'],['深いネイビー','deep navy eyes'],['青紫','blue-violet eyes'],['淡いラベンダー','pale lavender eyes'],['くすんだ紫','muted purple eyes'],['深い紫','deep violet eyes'],['グレージュ','gray-beige eyes'],['淡い琥珀色','pale amber eyes'],['蜂蜜色','honey-colored eyes'],['赤みのある茶色','reddish brown eyes'],['深いブラウン','deep brown eyes'],['黒に近い瞳','near-black eyes'],['深いワインレッド','deep wine-red eyes'],['淡いローズ','pale rose eyes'],['くすんだピンク','muted pink eyes'],['深いグリーン','deep green eyes'],['灰緑色','gray-green eyes'],['淡いミントグリーン','pale mint-green eyes'],['左右で異なる瞳色','heterochromatic eyes']],
- eyeShape:[
- ['切れ長のアーモンド形','long almond-shaped eyes'],['やや垂れ目','slightly downturned eyes'],['涼しげな目元','cool, composed eyes'],['重めの上まぶた','heavy upper eyelids'],['細めでアンニュイな目元','narrow, languid eyes'],['鋭い目つき','sharp, intense eyes'],['柔らかい垂れ目','soft downturned eyes'],['半目がちな目元','half-lidded eyes'],['目尻が少し上がった目','slightly upturned outer corners'],['伏し目がちな目元','downcast eyes']],
- build:[
- ['長身の細マッチョ','tall and lean with defined muscles'],['華奢で中性的','slender and androgynous'],['肩幅の広い長身','tall with broad shoulders'],['しなやかな細身','slender with a supple build'],['筋肉質でがっしり','solid and muscular build'],['均整の取れた標準体型','well-proportioned average build'],['細身で手足が長い','slim with long limbs'],['厚みのある上半身','broad, substantial upper body'],['引き締まったアスリート体型','lean athletic build'],['小柄で均整の取れた体格','shorter, well-proportioned build'],['長い首と華奢な肩','long neck and delicate shoulders'],['薄い体つきだが腹筋が明確','slim physique with defined abs']],
- skin:[
- ['色白','fair skin'],['青みのある色白肌','pale skin with cool undertones'],['ニュートラルな明るい肌','light skin with neutral undertones'],['温かみのある明るい肌','light skin with warm undertones'],['透けるような淡い肌','very pale, translucent-looking skin'],['オリーブ系の肌','olive skin tone'],['健康的な小麦肌','healthy tan skin']],
- face:[
- ['短めの中顔面','short midface'],['シャープなVラインの輪郭','sharp V-shaped jawline'],['小さく整った鼻','small, refined nose'],['小さな口元','small, delicate mouth'],['頬骨が控えめな輪郭','subtle cheekbones'],['端正で整った顔立ち','refined, well-balanced facial features'],['中性的で繊細な顔立ち','delicate, androgynous facial features'],['涼しげで大人びた顔立ち','cool, mature facial features'],['少年らしさの残る顔立ち','youthful facial features'],['彫りの深い顔立ち','defined facial structure']],
- outfit:[
- ['ダークゴシック','dark gothic fashion'],['上品な軍服','elegant military uniform'],['正統派タキシード','formal tailored tuxedo'],['モード系ブラックコーデ','avant-garde all-black fashion'],['和装と現代服のミックス','fusion of traditional Japanese clothing and modern fashion'],['近未来の戦闘服','futuristic combat uniform'],['クラシカルな貴族服','classic aristocratic attire'],['ロングコート中心の装い','long-coat-centered outfit'],['ミニマルな高級スーツ','minimalist luxury suit'],['学園の正装','formal academy uniform'],['退廃的なレイヤード','decadent layered fashion'],['ストリート系レイヤード','layered streetwear'],['黒シャツと細身のスラックス','black shirt and slim tailored trousers'],['ハイネックとロングコート','high-neck top and long coat'],['装飾的な礼装','ornate ceremonial attire'],['ダークカラーの和装','dark-toned traditional Japanese attire'],['レザーと金属パーツの衣装','leather outfit with metal accents'],['白を基調とした軍礼装','white formal military dress uniform'],['黒を基調とした軍礼装','black formal military dress uniform'],['端正な執事服','elegant butler attire'],['ハイブランド風のモード服','high-fashion designer-inspired outfit'],['シャツとベストのクラシカルコーデ','classic shirt and waistcoat outfit'],['長いマントを合わせた衣装','outfit paired with a long cape'],['近未来のテックウェア','futuristic techwear'],['和風の羽織スタイル','Japanese haori-inspired outfit'],['ベルベット素材の礼装','velvet formalwear'],['ダブルブレストのロングジャケット','double-breasted long jacket'],['繊細なレースを使ったゴシック服','gothic outfit with delicate lace'],['上質なニットとコート','premium knitwear and coat'],['タートルネックとテーラードジャケット','turtleneck and tailored jacket']],
- clothingColor:[
- ['黒を基調にした配色','a predominantly black color palette'],['黒とシルバー','black and silver color palette'],['黒と深い紫','black and deep purple color palette'],['グレーと黒','gray and black color palette'],['白とシルバー','white and silver color palette'],['ネイビーと黒','navy and black color palette'],['くすみブルーとグレー','muted blue and gray color palette'],['ワインレッドと黒','wine red and black color palette'],['アイボリーと淡いグレー','ivory and pale gray color palette'],['深いグリーンと黒','deep green and black color palette'],['淡いラベンダーとグレー','pale lavender and gray color palette'],['モノクローム','monochrome color palette'],['低彩度の寒色系','muted cool-toned colors'],['ダークトーンに控えめな金装飾','dark tones with subtle gold accents'],['白と淡いブルー','white and pale blue color palette']],
- accessories:[
- ['装飾なし','no visible accessories'],['細いシルバーのチェーン','a fine silver chain'],['小さなイヤーカフ','a small ear cuff'],['黒い手袋','black gloves'],['装飾的なブローチ','an ornate brooch'],['細身のネクタイ','a slim tie'],['リボンタイ','a ribbon tie'],['シルバーの指輪','silver rings'],['控えめな金属装飾','subtle metal embellishments'],['細いベルトとハーネス','slim belt and harness details'],['刺繍入りの襟','an embroidered collar'],['片耳の小さなピアス','a single small earring'],['レースの手袋','lace gloves'],['装飾的な肩章','ornate shoulder epaulettes'],['長いスカーフ','a long scarf'],['細いチョーカー','a slim choker']],
- expression:[
- ['気だるげでアンニュイ','languid and melancholic expression'],['冷静で無表情','calm, expressionless face'],['控えめな微笑み','a subtle, restrained smile'],['少し不機嫌そう','slightly displeased expression'],['静かな自信を感じる表情','quietly confident expression'],['物憂げな表情','wistful expression'],['感情を読ませない表情','an unreadable expression'],['柔らかく穏やかな表情','soft and gentle expression'],['鋭く見据える表情','an intense, focused gaze'],['眠たげな半目','sleepy, half-lidded expression']],
- hairDetail:[
- ['前髪は目に少しかかる','bangs slightly covering the eyes'],['前髪は眉にかかる長さ','bangs reaching the eyebrows'],['前髪は軽く束になっている','bangs arranged in soft separated strands'],['サイドの毛束が頬に沿う','side locks framing the cheeks'],['耳周りにふわりとした毛束','soft volume around the ears'],['襟足は自然に首に沿う','nape hair naturally following the neck'],['襟足に軽い外ハネ','slightly flipped-out nape hair'],['毛先は柔らかく散る','softly separated hair tips'],['毛量は多め','full hair volume'],['毛量は軽め','light, airy hair volume'],['トップに自然な立体感','natural volume at the crown'],['顔周りに細い後れ毛','fine loose strands around the face'],['片側の髪を耳にかける','hair tucked behind one ear'],['控えめなツヤ感','subtle hair sheen'],['マットな質感','matte hair texture']]
-};
-const fields=[
- {id:'world',label:'世界観',desc:'世界・舞台'}, {id:'hairColor',label:'髪色',desc:'色・メッシュ・グラデーション'},
- {id:'hairstyle',label:'髪型',desc:'シルエット・スタイル'}, {id:'hairDetail',label:'髪のディテール',desc:'前髪・襟足・毛量'},
- {id:'eyeColor',label:'瞳の色',desc:'虹彩の色'}, {id:'eyeShape',label:'目元',desc:'目の形・印象'},
- {id:'skin',label:'肌色',desc:'肌の色調'}, {id:'face',label:'顔立ち',desc:'輪郭・パーツ'},
- {id:'build',label:'体格',desc:'身長・筋肉量・骨格'}, {id:'outfit',label:'服装の系統',desc:'衣装・ファッション'},
- {id:'clothingColor',label:'服の配色',desc:'色・トーン'}, {id:'accessories',label:'装飾',desc:'小物・ディテール'},
- {id:'expression',label:'表情',desc:'目元・雰囲気'}
+const GROUPS = [
+  ["modern","現代・都会"],["casual","現代・日常"],["academy","学園"],
+  ["japanese","和風"],["fantasy","西洋ファンタジー"],["gothic","ゴシック"],
+  ["scifi","近未来・SF"],["postapo","終末世界"]
 ];
-let data=clone(defaults), current={}, locks={}, activeCategory='hairColor', editing=null;
-function clone(x){return JSON.parse(JSON.stringify(x))}
-function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=JSON.parse(raw);if(parsed&&parsed.data){data=parsed.data;current=parsed.current||{};locks=parsed.locks||{}}}}catch(e){}}
-function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({data,current,locks}))}catch(e){document.getElementById('copyStatus').textContent='ブラウザの保存領域に書き込めませんでした。データを書き出して保存してください。'}}
-function pick(id){const list=data[id]||[];if(!list.length)return {ja:'（候補なし）',en:''};const old=current[id]?.ja;let choices=list.filter(x=>x[0]!==old);if(!choices.length)choices=list;const v=choices[Math.floor(Math.random()*choices.length)];return {ja:v[0],en:v[1]}}
-function initCurrent(){fields.forEach(f=>{if(!current[f.id]||!data[f.id]?.some(x=>x[0]===current[f.id].ja))current[f.id]=pick(f.id)})}
-function renderFields(){const root=document.getElementById('drawFields');root.innerHTML='';fields.forEach(f=>{const item=current[f.id]||{ja:'—',en:''};const div=document.createElement('div');div.className='field';div.innerHTML=`<div class="field-top"><label>${esc(f.label)}</label><button class="lock ${locks[f.id]?'on':''}" data-lock="${f.id}">${locks[f.id]?'🔒 固定中':'🔓 固定する'}</button></div><div class="value">${esc(item.ja)}</div><span class="tag">${esc(f.desc)}</span>`;root.appendChild(div)});root.querySelectorAll('[data-lock]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.lock;locks[id]=!locks[id];persist();renderFields()}));}
-function buildPrompt(){const get=id=>current[id]?.en||'';const parts=[];if(get('world'))parts.push(get('world'));parts.push('one male character design');if(get('hairColor'))parts.push(get('hairColor'));if(get('hairstyle'))parts.push(get('hairstyle'));if(get('hairDetail'))parts.push(get('hairDetail'));if(get('eyeColor'))parts.push(get('eyeColor'));if(get('eyeShape'))parts.push(get('eyeShape'));if(get('skin'))parts.push(get('skin'));if(get('face'))parts.push(get('face'));if(get('build'))parts.push(get('build'));if(get('outfit'))parts.push('wearing '+get('outfit'));if(get('clothingColor'))parts.push(get('clothingColor'));if(get('accessories'))parts.push(get('accessories'));if(get('expression'))parts.push(get('expression'));return parts.filter(Boolean).join(', ')+'.'}
-function refreshPrompt(){document.getElementById('promptOutput').value=buildPrompt();persist()}
-function draw(forceAll=false){fields.forEach(f=>{if(forceAll||!locks[f.id])current[f.id]=pick(f.id)});renderFields();refreshPrompt();document.getElementById('copyStatus').textContent='新しい組み合わせを生成しました。'}
-function renderChips(){const root=document.getElementById('categoryChips');root.innerHTML='';fields.forEach(f=>{const b=document.createElement('button');b.className='chip '+(activeCategory===f.id?'active':'');b.textContent=f.label;b.onclick=()=>{activeCategory=f.id;editing=null;clearForm();renderChips();renderList()};root.appendChild(b)})}
-function renderList(){const arr=data[activeCategory]||[];document.getElementById('listTitle').textContent=(fields.find(f=>f.id===activeCategory)?.label||activeCategory)+' の候補';document.getElementById('countLabel').textContent=arr.length+'件';const root=document.getElementById('manageList');root.innerHTML='';if(!arr.length){root.innerHTML='<div class="empty">候補がありません。上から追加できます。</div>';return}arr.forEach((x,i)=>{const row=document.createElement('div');row.className='item';row.innerHTML=`<div class="item-text">${esc(x[0])}<span class="item-en">${esc(x[1])}</span></div><div class="item-buttons"><button class="btn small" data-edit="${i}">編集</button><button class="btn small danger" data-del="${i}">削除</button></div>`;root.appendChild(row)});root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(Number(b.dataset.edit)));root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.del);if(!confirm(`「${arr[i][0]}」を候補から削除しますか？`))return;arr.splice(i,1);if(current[activeCategory]?.ja===undefined||current[activeCategory]?.ja===arr[i]?.[0])current[activeCategory]=pick(activeCategory);persist();renderList();renderFields();refreshPrompt()})}
-function clearForm(){editing=null;document.getElementById('jaInput').value='';document.getElementById('enInput').value='';document.getElementById('saveItemBtn').textContent='候補を追加';document.getElementById('cancelEditBtn').hidden=true}
-function startEdit(i){editing=i;const x=data[activeCategory][i];document.getElementById('jaInput').value=x[0];document.getElementById('enInput').value=x[1];document.getElementById('saveItemBtn').textContent='変更を保存';document.getElementById('cancelEditBtn').hidden=false;document.getElementById('jaInput').focus()}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-document.getElementById('drawBtn').onclick=()=>draw(true);
-document.getElementById('rerollBtn').onclick=()=>draw(false);
-document.getElementById('refreshPromptBtn').onclick=refreshPrompt;
-document.getElementById('copyBtn').onclick=async()=>{const text=document.getElementById('promptOutput').value;try{await navigator.clipboard.writeText(text);document.getElementById('copyStatus').textContent='コピーしました！ PixAIなどに貼り付けて使えます。'}catch(e){const t=document.getElementById('promptOutput');t.focus();t.select();try{document.execCommand('copy');document.getElementById('copyStatus').textContent='コピーしました！'}catch(_){document.getElementById('copyStatus').textContent='テキストを選択して手動でコピーしてください。'}}};
-document.getElementById('saveItemBtn').onclick=()=>{const ja=document.getElementById('jaInput').value.trim(),en=document.getElementById('enInput').value.trim();if(!ja||!en){alert('日本語の表示名と英語プロンプトを両方入力してください。');return}const arr=data[activeCategory]||(data[activeCategory]=[]);if(editing!==null){arr[editing]=[ja,en]}else{arr.push([ja,en])}if(!current[activeCategory]||editing===null)current[activeCategory]={ja,en};clearForm();persist();renderList();renderFields();refreshPrompt()};
-document.getElementById('cancelEditBtn').onclick=clearForm;
-document.getElementById('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({data,current,locks},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ikemen-gacha-backup.json';a.click();URL.revokeObjectURL(url)};
-document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
-document.getElementById('importFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!parsed.data||!fields.every(f=>Array.isArray(parsed.data[f.id])))throw Error('形式が違います');if(!confirm('現在の候補と設定を、読み込むデータで置き換えますか？'))return;data=parsed.data;current=parsed.current||{};locks=parsed.locks||{};initCurrent();persist();renderAll()}catch(err){alert('データを読み込めませんでした。イケメンガチャのバックアップJSONか確認してください。')}finally{e.target.value=''}};
-document.getElementById('resetBtn').onclick=()=>{if(!confirm('候補を初期データに戻しますか？ 自分で追加・編集した候補は失われます。先に書き出してバックアップできます。'))return;data=clone(defaults);current={};locks={};initCurrent();persist();renderAll()};
-function renderAll(){renderFields();renderChips();renderList();refreshPrompt()}
-load();initCurrent();renderAll();
+
+const DEFAULTS = {
+world:[
+ {id:"w1",name:"現代・都会",group:"modern",prompt:"a contemporary urban setting, refined city atmosphere"},
+ {id:"w2",name:"現代・日常",group:"casual",prompt:"a contemporary everyday setting, quiet slice-of-life atmosphere"},
+ {id:"w3",name:"学園・青春",group:"academy",prompt:"a Japanese academy setting, youthful school atmosphere"},
+ {id:"w4",name:"和風・現代",group:"japanese",prompt:"a modern Japanese setting with subtle traditional elements"},
+ {id:"w5",name:"和風幻想",group:"japanese",prompt:"a mystical historical Japanese setting, traditional architecture and folklore atmosphere"},
+ {id:"w6",name:"西洋ファンタジー",group:"fantasy",prompt:"a richly detailed medieval fantasy world"},
+ {id:"w7",name:"ゴシック・ダーク",group:"gothic",prompt:"a dark gothic world, old stone architecture and solemn atmosphere"},
+ {id:"w8",name:"近未来・SF",group:"scifi",prompt:"a sleek near-future science fiction setting"},
+ {id:"w9",name:"終末世界",group:"postapo",prompt:"a quiet post-apocalyptic world, abandoned urban scenery"}
+],
+hairColor:[
+ {id:"hc1",name:"淡いプラチナベージュ",prompt:"soft pale platinum beige hair"},
+ {id:"hc2",name:"シルバーグレー",prompt:"muted silver gray hair"},
+ {id:"hc3",name:"アッシュブラウン",prompt:"cool ash brown hair"},
+ {id:"hc4",name:"ダークアッシュ",prompt:"deep dark ash brown hair"},
+ {id:"hc5",name:"ブルーブラック",prompt:"soft blue-black hair"},
+ {id:"hc6",name:"スモーキーブルー",prompt:"muted smoky blue hair"},
+ {id:"hc7",name:"淡いアッシュブルー",prompt:"pale ash blue hair"},
+ {id:"hc8",name:"ラベンダーグレー",prompt:"muted lavender gray hair"},
+ {id:"hc9",name:"ダスティピンク",prompt:"soft dusty pink hair"},
+ {id:"hc10",name:"ワインレッド",prompt:"deep muted wine red hair"},
+ {id:"hc11",name:"柔らかな黒髪",prompt:"soft natural black hair"},
+ {id:"hc12",name:"ミルクティーベージュ",prompt:"muted milk tea beige hair"},
+ {id:"hc13",name:"グレージュ",prompt:"cool greige hair"},
+ {id:"hc14",name:"淡いミントグレー",prompt:"pale muted mint gray hair"},
+ {id:"hc15",name:"スモーキーパープル",prompt:"smoky muted purple hair"},
+ {id:"hc16",name:"ダークブラウン",prompt:"deep natural dark brown hair"}
+],
+hairstyle:[
+ {id:"hs1",name:"ふわふわマッシュ",prompt:"a soft fluffy mash haircut, airy rounded silhouette, lightly separated fringe"},
+ {id:"hs2",name:"無造作ショート",prompt:"a casually tousled short haircut, loose textured layers and natural fringe"},
+ {id:"hs3",name:"センターパート",prompt:"a relaxed center-parted hairstyle, long soft bangs framing the face"},
+ {id:"hs4",name:"七三寄りのサイドパート",prompt:"a soft side-parted hairstyle, diagonal fringe and neat tapered sides"},
+ {id:"hs5",name:"ウルフカット",prompt:"a layered wolf cut, textured crown, long nape and feathered fringe"},
+ {id:"hs6",name:"長めのレイヤー",prompt:"medium-length layered hair, soft movement and face-framing strands"},
+ {id:"hs7",name:"襟足長めのショート",prompt:"a short layered haircut with a slightly long nape and wispy bangs"},
+ {id:"hs8",name:"くせ毛ウェーブ",prompt:"naturally wavy medium-length hair, loose curls and soft volume"},
+ {id:"hs9",name:"さらさらストレート",prompt:"smooth straight hair, clean silhouette and long delicate bangs"},
+ {id:"hs10",name:"長髪・低い位置で結ぶ",prompt:"long hair tied loosely at the nape, a few strands falling around the face"},
+ {id:"hs11",name:"オールバック",prompt:"a loose swept-back hairstyle, textured volume and an understated shape"},
+ {id:"hs12",name:"コンパクトなベリーショート",prompt:"a neat very short haircut, close-cropped sides and a softly textured top"},
+ {id:"hs13",name:"前下がりボブ",prompt:"a masculine forward-sloping bob, layered ends and long framing fringe"},
+ {id:"hs14",name:"外ハネミディアム",prompt:"a medium-length layered hairstyle with softly flipped-out ends"}
+],
+faceEyes:[
+ {id:"fe1",name:"アンニュイな伏し目",prompt:"refined delicate facial features, half-lidded downcast eyes, pale blue irises, a languid and wistful gaze"},
+ {id:"fe2",name:"切れ長の涼しい目元",prompt:"a slim V-shaped jawline, narrow elongated eyes, cool gray irises, a composed gaze"},
+ {id:"fe3",name:"柔らかく甘い目元",prompt:"a delicate youthful face, softly shaped eyes, muted lavender irises, a gentle and slightly wistful gaze"},
+ {id:"fe4",name:"鋭く静かな目元",prompt:"sharp elegant facial features, subtly upturned narrow eyes, dark blue irises, a quiet intense gaze"},
+ {id:"fe5",name:"眠たげな垂れ目",prompt:"soft facial contours, relaxed slightly downturned eyes, smoky brown irises, a sleepy expression"},
+ {id:"fe6",name:"知的で端正な顔立ち",prompt:"a well-balanced refined face, clear defined eyelids, narrow gray-green eyes, an intelligent gaze"},
+ {id:"fe7",name:"儚げで中性的",prompt:"a delicate androgynous face, large but subdued eyes, pale lilac irises, a fragile ethereal gaze"},
+ {id:"fe8",name:"大人びた切れ長の瞳",prompt:"mature elegant facial features, elongated half-lidded eyes, muted amber irises, a restrained gaze"},
+ {id:"fe9",name:"無表情で静かな顔",prompt:"a calm symmetrical face, straight eyebrows, quiet narrow eyes, desaturated blue-gray irises, an unreadable expression"},
+ {id:"fe10",name:"少し生意気な目元",prompt:"a handsome youthful face, slightly sharp eyes, muted olive irises, a faintly challenging gaze"},
+ {id:"fe11",name:"優しげな垂れ目",prompt:"soft handsome facial features, gentle downturned eyes, warm gray-brown irises, a tender gaze"},
+ {id:"fe12",name:"退廃的で鋭い顔立ち",prompt:"lean angular facial features, deep-set narrow eyes, dark wine-colored irises, a decadent and distant gaze"},
+ {id:"fe13",name:"端正な王子系",prompt:"elegant symmetrical facial features, refined almond-shaped eyes, pale golden irises, a noble composed gaze"},
+ {id:"fe14",name:"幼さの残る顔立ち",prompt:"soft youthful facial features, clear rounded eyes, muted blue-green irises, an innocent yet reserved gaze"}
+],
+build:[
+ {id:"b1",name:"細身・華奢",prompt:"a slender delicate build, narrow shoulders and long limbs"},
+ {id:"b2",name:"細身・長身",prompt:"a tall slim build, long proportions and a graceful silhouette"},
+ {id:"b3",name:"細マッチョ",prompt:"a lean athletic build, defined abdomen and subtle muscle definition"},
+ {id:"b4",name:"しなやかな筋肉質",prompt:"a flexible athletic physique, toned muscles and balanced proportions"},
+ {id:"b5",name:"肩幅のある体格",prompt:"a broad-shouldered athletic build, firm frame and natural proportions"},
+ {id:"b6",name:"長身で骨格がしっかり",prompt:"a tall solid frame, long limbs and defined bone structure"},
+ {id:"b7",name:"中性的で華奢",prompt:"a slender and androgynous physique, delicate shoulders and fine proportions"},
+ {id:"b8",name:"引き締まった標準体型",prompt:"a fit balanced physique, toned but not overly muscular"},
+ {id:"b9",name:"厚みのある筋肉質",prompt:"a muscular physique with a strong chest, broad back and powerful arms"},
+ {id:"b10",name:"しなやかな長身",prompt:"a tall graceful physique, lean muscle and elegant long proportions"},
+ {id:"b11",name:"小柄で軽やか",prompt:"a compact slender build, light proportions and subtle definition"},
+ {id:"b12",name:"鍛えられた実戦型",prompt:"a compact functional athletic build, strong core and practical muscle definition"}
+],
+outfit:[
+ {id:"o1",name:"都会的なモードスタイル",tags:["modern"],prompt:"a sophisticated modern black layered outfit, tailored jacket, clean lines and muted charcoal accents"},
+ {id:"o2",name:"シンプルなきれいめ私服",tags:["modern","casual"],prompt:"a neat contemporary outfit, understated knitwear, tailored trousers and a restrained neutral palette"},
+ {id:"o3",name:"ストリートカジュアル",tags:["modern","casual"],prompt:"a relaxed urban streetwear outfit, layered hoodie, loose trousers and muted colors"},
+ {id:"o4",name:"シャツ＋スラックス",tags:["modern","casual","academy"],prompt:"a simple button-up shirt with tailored slacks, understated and elegant styling"},
+ {id:"o5",name:"学園・ブレザー",tags:["academy"],prompt:"a refined school blazer uniform, crisp shirt, narrow tie and tailored slacks"},
+ {id:"o6",name:"学園・カーディガン",tags:["academy"],prompt:"a relaxed school uniform with a soft cardigan, open collar and neat trousers"},
+ {id:"o7",name:"和装・着流し",tags:["japanese"],prompt:"a traditional Japanese kimono worn casually, layered fabric and a muted subdued color palette"},
+ {id:"o8",name:"和風・羽織スタイル",tags:["japanese"],prompt:"a modern traditional Japanese outfit with a layered haori jacket, clean dark hakama-inspired trousers"},
+ {id:"o9",name:"和風・武人装束",tags:["japanese"],prompt:"traditional Japanese warrior-inspired clothing, layered dark garments, subtle cords and practical structure"},
+ {id:"o10",name:"ファンタジー・旅装",tags:["fantasy"],prompt:"a medieval fantasy travel outfit, layered leather-free fabric tunic, fitted trousers and a weathered cloak"},
+ {id:"o11",name:"ファンタジー・貴族服",tags:["fantasy"],prompt:"an elegant fantasy nobleman's outfit, high-collared coat, layered waistcoat and restrained embroidery"},
+ {id:"o12",name:"ファンタジー・騎士服",tags:["fantasy"],prompt:"a refined fantasy knight uniform, fitted coat, structured shoulders and subtle metal details"},
+ {id:"o13",name:"ゴシック・ロングコート",tags:["gothic"],prompt:"a dark gothic long coat, high collar, layered black fabrics and delicate silver details"},
+ {id:"o14",name:"ゴシック・クラシカル",tags:["gothic"],prompt:"a classical gothic outfit, fitted waistcoat, high-neck shirt and elegant dark tailoring"},
+ {id:"o15",name:"ダークファンタジー装束",tags:["gothic","fantasy"],prompt:"a dark fantasy ensemble, layered high-collared garments, weathered textures and restrained ornamental details"},
+ {id:"o16",name:"近未来・テックウェア",tags:["scifi"],prompt:"a sleek near-future techwear outfit, structured jacket, functional straps and dark technical fabrics"},
+ {id:"o17",name:"近未来・制服",tags:["scifi"],prompt:"a minimalist futuristic uniform, clean geometric tailoring and subtle luminous details"},
+ {id:"o18",name:"SF・研究員スタイル",tags:["scifi"],prompt:"a refined futuristic research uniform, neat high-neck layers and understated technical details"},
+ {id:"o19",name:"終末世界・実用服",tags:["postapo"],prompt:"a practical post-apocalyptic outfit, worn layered jacket, utility trousers and weathered fabric"},
+ {id:"o20",name:"終末世界・ロングアウター",tags:["postapo"],prompt:"a long weathered outer coat, layered survival clothing and subdued earth-toned fabrics"}
+],
+mood:[
+ {id:"m1",name:"儚げ・透明感",prompt:"a fragile ethereal presence, translucent atmosphere and quiet melancholy"},
+ {id:"m2",name:"アンニュイ・気怠げ",prompt:"a languid nonchalant presence, understated emotion and a distant mood"},
+ {id:"m3",name:"静かでクール",prompt:"a quiet cool presence, restrained emotion and composed body language"},
+ {id:"m4",name:"優しく穏やか",prompt:"a gentle calm presence, soft demeanor and subtle warmth"},
+ {id:"m5",name:"退廃的・ミステリアス",prompt:"a mysterious decadent atmosphere, elusive expression and shadowed elegance"},
+ {id:"m6",name:"知的・理性的",prompt:"an intelligent and thoughtful presence, precise gestures and an analytical gaze"},
+ {id:"m7",name:"孤独・近寄りがたい",prompt:"a solitary and untouchable presence, emotional distance and quiet intensity"},
+ {id:"m8",name:"甘く柔らかい",prompt:"a sweet delicate atmosphere, gentle expression and soft understated charm"},
+ {id:"m9",name:"危うく挑発的",prompt:"a subtly provocative presence, dangerous charm and controlled confidence"},
+ {id:"m10",name:"気品・ノーブル",prompt:"a noble elegant presence, graceful posture and dignified restraint"},
+ {id:"m11",name:"無邪気・人懐こい",prompt:"an approachable playful presence, bright energy and natural ease"},
+ {id:"m12",name:"影のある大人",prompt:"a mature shadowed presence, quiet experience and restrained intensity"},
+ {id:"m13",name:"飄々として掴めない",prompt:"an elusive carefree presence, unreadable intentions and effortless composure"},
+ {id:"m14",name:"誠実・実直",prompt:"an earnest grounded presence, steady eyes and straightforward demeanor"},
+ {id:"m15",name:"情熱を秘めた静けさ",prompt:"a quiet exterior concealing intense passion, controlled emotion and focused eyes"},
+ {id:"m16",name:"気高く孤高",prompt:"a proud solitary presence, dignified distance and unwavering composure"}
+]
+};
+
+const CATEGORY_META = [
+ {key:"world",title:"世界観・ジャンル",note:"服装候補と連動"},
+ {key:"hairColor",title:"髪色",note:"色味のみ"},
+ {key:"hairstyle",title:"髪型",note:"シルエット・前髪・襟足を統合"},
+ {key:"faceEyes",title:"顔立ち・瞳",note:"顔・目元・瞳色をひとまとめ"},
+ {key:"build",title:"体格",note:"骨格・筋肉・全体のバランス"},
+ {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
+ {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
+];
+const STORAGE_KEY="ikemen-gacha-v2";
+let catalog, selected={}, locked={}, editing=null;
+const $=s=>document.querySelector(s);
+const clone=obj=>JSON.parse(JSON.stringify(obj));
+const uid=()=> "custom_"+Math.random().toString(36).slice(2,10);
+function load(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+  catalog=saved?.catalog||clone(DEFAULTS);
+  selected=saved?.selected||{};
+  locked=saved?.locked||{};
+ }catch(e){catalog=clone(DEFAULTS);selected={};locked={};}
+ for(const c of CATEGORY_META){
+  if(!Array.isArray(catalog[c.key]))catalog[c.key]=clone(DEFAULTS[c.key]);
+  if(!catalog[c.key].length)catalog[c.key]=clone(DEFAULTS[c.key]);
+  if(!catalog[c.key].some(x=>x.id===selected[c.key]))selected[c.key]=catalog[c.key][0].id;
+  if(typeof locked[c.key]!=="boolean")locked[c.key]=false;
+ }
+}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify({catalog,selected,locked}));}
+function item(key){return catalog[key].find(x=>x.id===selected[key])||catalog[key][0];}
+function currentWorld(){return item("world");}
+function compatibleOutfits(world=currentWorld()){
+ const groups=world?.group?[world.group]:(world?.groups||[]);
+ return catalog.outfit.filter(o=>o.tags?.some(t=>groups.includes(t)));
+}
+function choose(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function setSelected(key,id){selected[key]=id;save();render();}
+function randomizeKey(key){
+ if(locked[key])return;
+ if(key==="world" && locked.outfit){
+  const tags=item("outfit")?.tags||[];
+  const choices=catalog.world.filter(w=>(w.group?[w.group]:(w.groups||[])).some(g=>tags.includes(g)));
+  if(!choices.length){toast("固定中の服装に合う世界観がありません");return;}
+  const pool=choices.filter(x=>x.id!==selected.world);
+  selected.world=(pool.length?choose(pool):choose(choices)).id;
+ }else if(key==="outfit"){
+  const arr=compatibleOutfits();
+  if(!arr.length){toast("この世界観に対応する服装候補がありません");return;}
+  const pool=arr.filter(x=>x.id!==selected.outfit);
+  selected.outfit=(pool.length?choose(pool):choose(arr)).id;
+ }else{
+  const arr=catalog[key],pool=arr.filter(x=>x.id!==selected[key]);
+  selected[key]=(pool.length?choose(pool):choose(arr)).id;
+ }
+ if(key==="world" && !locked.outfit){
+  const arr=compatibleOutfits();
+  if(arr.length){const pool=arr.filter(x=>x.id!==selected.outfit);selected.outfit=(pool.length?choose(pool):choose(arr)).id;}
+ }
+ save();render();
+}
+function randomizeAll(){
+ // Outfit lock constrains the available world choices; otherwise world is chosen first.
+ if(!locked.world){
+  if(locked.outfit){
+   const tags=item("outfit")?.tags||[];
+   const valid=catalog.world.filter(w=>(w.group?[w.group]:(w.groups||[])).some(g=>tags.includes(g)));
+   if(valid.length){const pool=valid.filter(w=>w.id!==selected.world);selected.world=(pool.length?choose(pool):choose(valid)).id;}
+  }else{
+   const pool=catalog.world.filter(w=>w.id!==selected.world);
+   selected.world=(pool.length?choose(pool):choose(catalog.world)).id;
+  }
+ }
+ for(const key of ["hairColor","hairstyle","faceEyes","build","mood"]){
+  if(!locked[key]){const pool=catalog[key].filter(x=>x.id!==selected[key]);selected[key]=(pool.length?choose(pool):choose(catalog[key])).id;}
+ }
+ if(!locked.outfit){
+  const arr=compatibleOutfits();
+  if(arr.length){const pool=arr.filter(x=>x.id!==selected.outfit);selected.outfit=(pool.length?choose(pool):choose(arr)).id;}
+ }
+ save();render();
+}
+function promptText(){
+ const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),fe=item("faceEyes"),b=item("build"),o=item("outfit"),m=item("mood");
+ const parts=[
+  "masterpiece, best quality, delicate and beautiful anime illustration, refined 2D anime aesthetic, intricate facial details, nuanced soft shading",
+  "a handsome young adult man",
+  w?.prompt,hc?.prompt,hs?.prompt,fe?.prompt,b?.prompt,o?.prompt,m?.prompt,
+  "harmonious character design, cohesive styling, elegant composition"
+ ].filter(Boolean);
+ if($("#noHighlights").checked)parts.push("no eye highlights, no catchlights, matte irises, eyes do not reflect light");
+ if($("#noPiercing").checked)parts.push("no piercings, no earrings, no tattoos");
+ return parts.join(", ");
+}
+function negativeText(){
+ const n=["worst quality","low quality","low resolution","blurry","poorly drawn face","bad anatomy","deformed body","malformed hands","extra fingers","missing fingers","extra limbs","asymmetrical eyes","text","watermark"];
+ if($("#noPiercing").checked)n.push("piercings","earrings","tattoos");
+ if($("#noHighlights").checked)n.push("eye highlights","catchlights","glossy eye reflections");
+ return n.join(", ");
+}
+function updatePrompts(){
+ $("#positive").value=promptText();
+ $("#negative").value=negativeText();
+}
+function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function render(){
+ const grid=$("#categoryGrid");
+ grid.innerHTML=CATEGORY_META.map((meta,i)=>{
+  const list=catalog[meta.key],cur=item(meta.key),isLock=locked[meta.key];
+  const candidates=list.map(c=>`
+   <div class="candidate">
+    <div class="candidate-main">
+     <div class="candidate-name">${escapeHTML(c.name)}</div>
+     <div class="candidate-prompt">${escapeHTML(c.prompt)}</div>
+    </div>
+    <div class="candidate-actions">
+     <button data-use="${meta.key}" data-id="${c.id}">選ぶ</button>
+     <button data-edit="${meta.key}" data-id="${c.id}">編集</button>
+     <button data-delete="${meta.key}" data-id="${c.id}" aria-label="削除">削除</button>
+    </div>
+   </div>`).join("");
+  return `<section class="category-card" data-category="${meta.key}">
+   <div class="card-head">
+    <div class="card-title"><span class="num">${String(i+1).padStart(2,"0")}</span>${meta.title}</div>
+    <div class="card-actions">
+     <button class="lock ${isLock?"active":""}" data-lock="${meta.key}">${isLock?"● 固定中":"○ 固定"}</button>
+     <button class="reroll" data-reroll="${meta.key}">↻ 抽選</button>
+    </div>
+   </div>
+   <p class="result-name">${escapeHTML(cur?.name||"未選択")}</p>
+   <p class="result-prompt">${escapeHTML(cur?.prompt||"")}</p>
+   <div class="card-foot"><span class="count">${list.length}候補 · ${escapeHTML(meta.note)}</span><button class="btn small" data-add="${meta.key}">＋ 候補を追加</button></div>
+   <details><summary>候補一覧・編集</summary><div class="candidate-list">${candidates||'<p class="empty">候補がありません。</p>'}</div></details>
+  </section>`;
+ }).join("");
+ updatePrompts();
+}
+function toast(msg){
+ const el=$("#toast");el.textContent=msg;el.classList.add("show");
+ clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),1900);
+}
+async function copyText(text){
+ try{await navigator.clipboard.writeText(text);toast("コピーしました");}
+ catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("コピーしました");}
+}
+function openEditor(key,id=null){
+ editing={key,id};
+ const existing=id?catalog[key].find(x=>x.id===id):null;
+ $("#dialogTitle").textContent=existing?"候補を編集":"候補を追加";
+ $("#candidateName").value=existing?.name||"";
+ $("#candidatePrompt").value=existing?.prompt||"";
+ $("#worldGroupRow").hidden=key!=="world";
+ $("#outfitTagsRow").hidden=key!=="outfit";
+ if(key==="world")$("#worldGroup").value=existing?.group||"modern";
+ if(key==="outfit"){
+  $("#outfitTags").innerHTML=GROUPS.map(([g,label])=>`<label class="check"><input type="checkbox" value="${g}" ${existing?.tags?.includes(g)?"checked":""}> ${label}</label>`).join("");
+ }
+ $("#editDialog").showModal();
+}
+function closeEditor(){$("#editDialog").close();editing=null;}
+$("#categoryGrid").addEventListener("click",e=>{
+ const t=e.target.closest("button");if(!t)return;
+ if(t.dataset.lock){const k=t.dataset.lock;locked[k]=!locked[k];save();render();}
+ else if(t.dataset.reroll)randomizeKey(t.dataset.reroll);
+ else if(t.dataset.add)openEditor(t.dataset.add);
+ else if(t.dataset.use)setSelected(t.dataset.use,t.dataset.id);
+ else if(t.dataset.edit)openEditor(t.dataset.edit,t.dataset.id);
+ else if(t.dataset.delete){
+  const k=t.dataset.delete,id=t.dataset.id;
+  if(catalog[k].length<=1){toast("各項目に最低1つの候補が必要です");return;}
+  const target=catalog[k].find(x=>x.id===id);
+  if(!confirm(`「${target?.name||"この候補"}」を削除しますか？`))return;
+  catalog[k]=catalog[k].filter(x=>x.id!==id);
+  if(selected[k]===id)selected[k]=catalog[k][0].id;
+  save();render();
+ }
+});
+$("#editForm").addEventListener("submit",e=>{
+ e.preventDefault();if(!editing)return;
+ const {key,id}=editing;
+ const name=$("#candidateName").value.trim(),prompt=$("#candidatePrompt").value.trim();
+ if(!name||!prompt)return;
+ const data={id:id||uid(),name,prompt};
+ if(key==="world")data.group=$("#worldGroup").value;
+ if(key==="outfit"){
+  data.tags=[...$("#outfitTags").querySelectorAll("input:checked")].map(x=>x.value);
+  if(!data.tags.length){toast("対応する世界観を1つ以上選んでください");return;}
+ }
+ const idx=id?catalog[key].findIndex(x=>x.id===id):-1;
+ if(idx>=0)catalog[key][idx]=data;else catalog[key].push(data);
+ if(!id)selected[key]=data.id;
+ // Editing a world may leave the current outfit incompatible; select a valid outfit automatically.
+ if(key==="world" && !locked.outfit && !compatibleOutfits().some(x=>x.id===selected.outfit)){
+  const valid=compatibleOutfits();if(valid.length)selected.outfit=choose(valid).id;
+ }
+ save();closeEditor();render();toast("候補を保存しました");
+});
+$("#closeDialog").addEventListener("click",closeEditor);
+$("#cancelEdit").addEventListener("click",closeEditor);
+$("#allRoll").addEventListener("click",randomizeAll);
+$("#unlockAll").addEventListener("click",()=>{for(const k in locked)locked[k]=false;save();render();toast("すべての固定を解除しました");});
+$("#noPiercing").addEventListener("change",updatePrompts);
+$("#noHighlights").addEventListener("change",updatePrompts);
+$("#copyPositive").addEventListener("click",()=>copyText($("#positive").value));
+$("#copyNegative").addEventListener("click",()=>copyText($("#negative").value));
+$("#copyAll").addEventListener("click",()=>copyText("Positive prompt:\n"+$("#positive").value+"\n\nNegative prompt:\n"+$("#negative").value));
+$("#exportBtn").addEventListener("click",()=>{
+ const data={version:2,catalog,selected,locked};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="ikemen-gacha-candidates.json";a.click();URL.revokeObjectURL(url);toast("JSONを保存しました");
+});
+$("#importBtn").addEventListener("click",()=>$("#importFile").click());
+$("#importFile").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const data=JSON.parse(await file.text()),incoming=data.catalog||data;
+  for(const c of CATEGORY_META){
+   if(!Array.isArray(incoming[c.key])||!incoming[c.key].length)throw new Error("invalid");
+  }
+  catalog=incoming;selected=data.selected||{};locked=data.locked||{};
+  for(const c of CATEGORY_META)if(!catalog[c.key].some(x=>x.id===selected[c.key]))selected[c.key]=catalog[c.key][0].id;
+  if(!compatibleOutfits().some(x=>x.id===selected.outfit)){
+   const valid=compatibleOutfits();if(valid.length)selected.outfit=valid[0].id;
+  }
+  save();render();toast("候補を読み込みました");
+ }catch(err){alert("JSONを読み込めませんでした。イケメンガチャのJSONファイルを選択してください。");}
+ e.target.value="";
+});
+$("#resetDefaults").addEventListener("click",()=>{
+ if(!confirm("追加・編集した候補を含め、すべて初期状態に戻しますか？"))return;
+ catalog=clone(DEFAULTS);selected={};locked={};
+ for(const c of CATEGORY_META){selected[c.key]=catalog[c.key][0].id;locked[c.key]=false;}
+ save();render();toast("初期候補に戻しました");
+});
+load();
+if(!selected.world)for(const c of CATEGORY_META)selected[c.key]=catalog[c.key][0].id;
+if(!compatibleOutfits().some(x=>x.id===selected.outfit)){
+ const valid=compatibleOutfits();if(valid.length)selected.outfit=valid[0].id;
+}
+save();render();
 </script>
 </body>
 </html>
