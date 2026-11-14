@@ -528,8 +528,8 @@ const CATEGORY_META = [
  {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
  {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
 ];
-const STORAGE_KEY="ikemen-gacha-v7";
-let catalog, selected={}, locked={}, editing=null;
+const STORAGE_KEY="ikemen-gacha-v8";
+let catalog, selected={}, locked={}, editing=null, drawHistory={};
 const $=s=>document.querySelector(s);
 const clone=obj=>JSON.parse(JSON.stringify(obj));
 const uid=()=> "custom_"+Math.random().toString(36).slice(2,10);
@@ -537,11 +537,12 @@ function load(){
  try{
   let raw=localStorage.getItem(STORAGE_KEY);
   const migrating=!raw;
-  if(migrating)raw=localStorage.getItem("ikemen-gacha-v5");
+  if(migrating)raw=localStorage.getItem("ikemen-gacha-v7")||localStorage.getItem("ikemen-gacha-v5");
   const saved=JSON.parse(raw);
   catalog=saved?.catalog||clone(DEFAULTS);
   selected=saved?.selected||{};
   locked=saved?.locked||{};
+  drawHistory=saved?.drawHistory||{};
   if(migrating && Array.isArray(catalog.hairstyle)){
    const customHair=catalog.hairstyle.filter(x=>String(x.id).startsWith("custom_"));
    catalog.hairstyle=[...clone(DEFAULTS.hairstyle),...customHair];
@@ -557,7 +558,7 @@ function load(){
 }
 function save(){
  // iOSのファイルプレビュー等でlocalStorageが利用できなくても、画面描画や抽選を止めない。
- try{localStorage.setItem(STORAGE_KEY,JSON.stringify({catalog,selected,locked}));}
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify({catalog,selected,locked,drawHistory}));}
  catch(e){/* 保存領域が使えない環境では、この画面を開いている間だけメモリ上で保持 */}
 }
 function item(key){return catalog[key].find(x=>x.id===selected[key])||catalog[key][0];}
@@ -567,27 +568,46 @@ function compatibleOutfits(world=currentWorld()){
  return catalog.outfit.filter(o=>o.tags?.some(t=>groups.includes(t)));
 }
 function choose(arr){return arr[Math.floor(Math.random()*arr.length)];}
-function setSelected(key,id){selected[key]=id;save();render();}
+function balancedDraw(key,arr){
+ if(!arr.length)return null;
+ // Soft balancing only: recent repeats become less likely, but never impossible.
+ // This is NOT a no-repeat cycle and does NOT require every candidate to appear.
+ const recent=(drawHistory[key]||[]).slice(-10);
+ const weights=arr.map(candidate=>{
+  const count=recent.filter(id=>id===candidate.id).length;
+  return 1/(1+count*1.5);
+ });
+ const total=weights.reduce((sum,w)=>sum+w,0);
+ let roll=Math.random()*total;
+ let index=weights.findIndex(w=>(roll-=w)<=0);
+ if(index<0)index=arr.length-1;
+ const chosen=arr[index];
+ const history=recent.concat(chosen.id);
+ drawHistory[key]=history.slice(-10);
+ return chosen;
+}
+function setSelected(key,id){
+ selected[key]=id;
+ save();render();
+}
 function randomizeKey(key){
  if(locked[key])return;
  if(key==="world" && locked.outfit){
   const tags=item("outfit")?.tags||[];
   const choices=catalog.world.filter(w=>(w.group?[w.group]:(w.groups||[])).some(g=>tags.includes(g)));
   if(!choices.length){toast("固定中の服装に合う世界観がありません");return;}
-  const pool=choices.filter(x=>x.id!==selected.world);
-  selected.world=(pool.length?choose(pool):choose(choices)).id;
+  selected.world=balancedDraw("world",choices).id;
  }else if(key==="outfit"){
   const arr=compatibleOutfits();
   if(!arr.length){toast("この世界観に対応する服装候補がありません");return;}
-  const pool=arr.filter(x=>x.id!==selected.outfit);
-  selected.outfit=(pool.length?choose(pool):choose(arr)).id;
+  selected.outfit=balancedDraw("outfit",arr).id;
  }else{
-  const arr=catalog[key],pool=arr.filter(x=>x.id!==selected[key]);
-  selected[key]=(pool.length?choose(pool):choose(arr)).id;
+  const arr=catalog[key];
+  selected[key]=balancedDraw(key,arr).id;
  }
  if(key==="world" && !locked.outfit){
   const arr=compatibleOutfits();
-  if(arr.length){const pool=arr.filter(x=>x.id!==selected.outfit);selected.outfit=(pool.length?choose(pool):choose(arr)).id;}
+  if(arr.length)selected.outfit=balancedDraw("outfit",arr).id;
  }
  save();render();
 }
@@ -597,18 +617,17 @@ function randomizeAll(){
   if(locked.outfit){
    const tags=item("outfit")?.tags||[];
    const valid=catalog.world.filter(w=>(w.group?[w.group]:(w.groups||[])).some(g=>tags.includes(g)));
-   if(valid.length){const pool=valid.filter(w=>w.id!==selected.world);selected.world=(pool.length?choose(pool):choose(valid)).id;}
+   if(valid.length)selected.world=balancedDraw("world",valid).id;
   }else{
-   const pool=catalog.world.filter(w=>w.id!==selected.world);
-   selected.world=(pool.length?choose(pool):choose(catalog.world)).id;
+   selected.world=balancedDraw("world",catalog.world).id;
   }
  }
  for(const key of ["hairColor","hairstyle","faceShape","eyeShape","irisColor","build","mood"]){
-  if(!locked[key]){const pool=catalog[key].filter(x=>x.id!==selected[key]);selected[key]=(pool.length?choose(pool):choose(catalog[key])).id;}
+  if(!locked[key])selected[key]=balancedDraw(key,catalog[key]).id;
  }
  if(!locked.outfit){
   const arr=compatibleOutfits();
-  if(arr.length){const pool=arr.filter(x=>x.id!==selected.outfit);selected.outfit=(pool.length?choose(pool):choose(arr)).id;}
+  if(arr.length)selected.outfit=balancedDraw("outfit",arr).id;
  }
  save();render();
 }
@@ -616,7 +635,7 @@ function promptText(){
  const w=item("world"),hc=item("hairColor"),hs=item("hairstyle"),fs=item("faceShape"),es=item("eyeShape"),ic=item("irisColor"),b=item("build"),o=item("outfit"),m=item("mood");
  const parts=[
   "masterpiece, best quality, delicate and beautiful anime illustration, refined 2D anime aesthetic, intricate facial details, nuanced soft shading",
-  "a handsome young adult man",
+  "1boy, handsome",
   w?.prompt,hc?.prompt,hs?.prompt,fs?.prompt,es?.prompt,ic?.prompt,b?.prompt,o?.prompt,m?.prompt,
   "harmonious character design, cohesive styling, elegant composition"
  ].filter(Boolean);
