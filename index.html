@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#24212d">
-<title>イケメンガチャ｜Prompt Maker</title>
+<title>イケメンガチャ v6｜Prompt Maker</title>
 <style>
 :root{
   --bg:#17161d;--panel:#24222d;--panel2:#2d2a37;--line:#464150;
@@ -194,6 +194,89 @@ const GROUPS = [
   ["scifi","近未来・SF"],["postapo","終末世界"]
 ];
 
+
+function buildHairstyles(){
+ const bases = [
+  {group:"ショート",items:[
+   ["ふわふわマッシュ","a fluffy rounded mash haircut with airy crown volume and a softly tapered nape"],
+   ["重めマッシュ","a full compact mash haircut with a dense rounded silhouette and softly curved sides"],
+   ["レイヤーショート","a short layered haircut with a clean outline and naturally feathered sides"],
+   ["ツーブロックショート","a modern two-block short haircut with closely tapered sides and a longer top"],
+   ["ショートウルフ","a short wolf cut with layered crown volume, textured sides and a slightly longer nape"],
+   ["クロップショート","a neat textured crop haircut with a compact shape and closely tapered sides"],
+   ["アシンメトリーショート","an asymmetrical short haircut with uneven side lengths and a distinct angular silhouette"]
+  ]},
+  {group:"ミディアム",items:[
+   ["レイヤーミディアム","a medium-length layered haircut with flowing face-framing layers and balanced volume"],
+   ["ミディアムウルフ","a medium wolf cut with a layered crown, feathered sides and a longer nape"],
+   ["シャギーミディアム","a medium shag haircut with airy choppy layers and feathered ends"],
+   ["ハッシュカット","a soft hush cut with delicate face-framing layers and naturally tapered ends"],
+   ["ナチュラルボブ","a softly rounded jaw-to-neck-length bob with a clean balanced outline"],
+   ["前下がりボブ","a graduated forward-sloping bob with longer front sections and a neat nape"],
+   ["アシンメトリーミディアム","an asymmetrical medium haircut with uneven lengths and softly layered movement"]
+  ]},
+  {group:"ロング",items:[
+   ["ロングレイヤー","long layered hair with flowing face-framing sections and tapered ends"],
+   ["ロングウルフ","a long wolf cut with a layered crown, feathered sides and a long textured nape"],
+   ["ロングストレート","long hair with a clean straight silhouette falling past the shoulders"],
+   ["ロングシャギー","long shaggy hair with airy cascading layers and feathered ends"],
+   ["ロングハッシュレイヤー","long hush-cut layers framing the face with soft flowing lengths"],
+   ["ロングハーフアップ","long layered hair gathered in a half-up style with flowing lengths below"],
+   ["ロングローポニー","long hair gathered into a relaxed low ponytail with a soft, natural silhouette"]
+  ]}
+ ];
+ const fringes = {
+  "ショート":[
+   ["自然なフルバング","a naturally full fringe softly covering the forehead"],
+   ["束感のある前髪","lightly separated textured fringe with delicate individual locks"],
+   ["サイドに流した前髪","a soft side-swept fringe blending into the temples"],
+   ["センターパート","a relaxed center part with softly divided front sections"],
+   ["コンマバング","curved comma-shaped front locks framing the forehead"],
+   ["アップバング","the front hair swept upward to reveal the forehead"]
+  ],
+  "ミディアム":[
+   ["自然なフルバング","a soft natural fringe gently framing the eyebrows"],
+   ["カーテンバング","curtain bangs parted in the center and flowing along the temples"],
+   ["センターパート","a relaxed center part with long face-framing front sections"],
+   ["サイドパート","a natural side part with a diagonal sweep across the forehead"],
+   ["コンマバング","soft comma-shaped front locks curving gently over the forehead"],
+   ["かき上げ前髪","the front hair casually swept up and away from the face"]
+  ],
+  "ロング":[
+   ["長めカーテンバング","long curtain bangs parted at the center and blending into the sides"],
+   ["ロングセンターパート","a center part with long flowing face-framing sections"],
+   ["サイドに流した前髪","long side-swept front sections softly framing one side of the face"],
+   ["柔らかなフルバング","a soft full fringe delicately framing the forehead"],
+   ["フェイスフレーミング","long face-framing layers with no distinct blunt fringe"],
+   ["額を出したスタイル","the front hair swept gently away from the face, leaving the forehead open"]
+  ]
+ };
+ const textures = [
+  ["なめらかなストレート","smooth silky straight strands with a sleek natural finish"],
+  ["柔らかなナチュラルストレート","soft naturally straight hair with subtle volume and gentle movement"],
+  ["ゆるいウェーブ","loose natural waves flowing softly through the lengths"],
+  ["エアリーな束感","airy separated layers with soft piecey texture and light movement"],
+  ["柔らかなカール","soft loose curls with natural volume and delicate definition"]
+ ];
+ const result=[];
+ let n=0;
+ for(const base of bases){
+  for(const [baseName,basePrompt] of base.items){
+   for(const [fringeName,fringePrompt] of fringes[base.group]){
+    for(const [textureName,texturePrompt] of textures){
+     n++;
+     result.push({
+      id:"hs_combo_"+n,
+      name:baseName+" × "+fringeName+" × "+textureName,
+      prompt:basePrompt+", "+fringePrompt+", "+texturePrompt
+     });
+    }
+   }
+  }
+ }
+ return result;
+}
+
 const DEFAULTS = {
 world:[
  {id:"w1",name:"現代・都会",group:"modern",prompt:"a contemporary urban setting, refined city atmosphere"},
@@ -207,79 +290,78 @@ world:[
  {id:"w9",name:"終末世界",group:"postapo",prompt:"a quiet post-apocalyptic world, abandoned urban scenery"}
 ],
 hairColor:[
- {id:"hc1",name:"ナチュラルブラック",prompt:"natural soft black hair"},
- {id:"hc2",name:"ブルーブラック",prompt:"blue-black hair with a subtle cool sheen"},
- {id:"hc3",name:"ダークアッシュ",prompt:"deep dark ash brown hair"},
- {id:"hc4",name:"アッシュブラウン",prompt:"cool ash brown hair"},
- {id:"hc5",name:"ミルクティーベージュ",prompt:"muted milk tea beige hair"},
- {id:"hc6",name:"グレージュ",prompt:"cool greige hair"},
- {id:"hc7",name:"プラチナブロンド",prompt:"pale platinum blonde hair"},
- {id:"hc8",name:"シルバーグレー",prompt:"muted silver gray hair"},
- {id:"hc9",name:"スモーキーブルー",prompt:"muted smoky blue hair"},
- {id:"hc10",name:"アッシュブルー",prompt:"pale ash blue hair"},
- {id:"hc11",name:"ラベンダーグレー",prompt:"muted lavender gray hair"},
- {id:"hc12",name:"スモーキーパープル",prompt:"smoky muted purple hair"},
- {id:"hc13",name:"ダスティピンク",prompt:"soft dusty pink hair"},
- {id:"hc14",name:"ワインレッド",prompt:"deep muted wine red hair"},
- {id:"hc15",name:"ダークブラウン",prompt:"deep natural dark brown hair"},
- {id:"hc16",name:"グレーブラウン",prompt:"muted gray brown hair"},
- {id:"hc17",name:"ブラック→シルバーグラデ",prompt:"black hair fading gradually into silver gray at the ends"},
- {id:"hc18",name:"ダークブラウン→ベージュグラデ",prompt:"dark brown hair with a soft beige gradient toward the ends"},
- {id:"hc19",name:"アッシュブラウン→グレージュ",prompt:"ash brown hair fading into cool greige at the tips"},
- {id:"hc20",name:"ブルーブラック→ブルー",prompt:"blue-black hair with a subtle deep blue gradient"},
- {id:"hc21",name:"シルバー→ラベンダー",prompt:"silver gray hair with a pale lavender gradient at the ends"},
- {id:"hc22",name:"プラチナ→ペールブルー",prompt:"platinum blonde hair fading into pale icy blue"},
- {id:"hc23",name:"グレージュ→スモーキーピンク",prompt:"greige hair with a muted smoky pink gradient"},
- {id:"hc24",name:"ブラック→ワインレッド",prompt:"black hair fading into deep wine red at the ends"},
- {id:"hc25",name:"黒髪＋シルバーインナー",prompt:"natural black hair with hidden silver gray inner-color sections"},
- {id:"hc26",name:"アッシュ＋ブルーインナー",prompt:"ash brown hair with muted blue inner-color sections"},
- {id:"hc27",name:"ベージュ＋ラベンダーインナー",prompt:"beige hair with pale lavender inner-color sections"},
- {id:"hc28",name:"シルバー＋ブルーの毛先",prompt:"silver gray hair with distinct muted blue tips"},
- {id:"hc29",name:"ダークカラー＋フェイスフレーミング",prompt:"dark hair with subtle lighter face-framing highlights"},
- {id:"hc30",name:"淡いツートーン",prompt:"soft two-tone hair combining pale platinum beige and muted lavender"}
+  {id:"hc1",name:"ナチュラルブラック",prompt:"natural soft black hair"},
+  {id:"hc2",name:"ブルーブラック",prompt:"blue-black hair with a subtle cool sheen"},
+  {id:"hc3",name:"ジェットブラック",prompt:"deep jet-black hair"},
+  {id:"hc4",name:"ソフトブラック",prompt:"soft natural black hair with gentle charcoal undertones"},
+  {id:"hc5",name:"ダークブラウン",prompt:"deep natural dark brown hair"},
+  {id:"hc6",name:"チョコレートブラウン",prompt:"rich muted chocolate brown hair"},
+  {id:"hc7",name:"アッシュブラウン",prompt:"cool ash brown hair"},
+  {id:"hc8",name:"グレーブラウン",prompt:"muted gray brown hair"},
+  {id:"hc9",name:"モカブラウン",prompt:"soft muted mocha brown hair"},
+  {id:"hc10",name:"ココアブラウン",prompt:"cool cocoa brown hair"},
+  {id:"hc11",name:"ダークアッシュ",prompt:"deep dark ash brown hair"},
+  {id:"hc12",name:"アッシュグレージュ",prompt:"cool ash greige hair"},
+  {id:"hc13",name:"グレージュ",prompt:"cool greige hair"},
+  {id:"hc14",name:"ベージュブラウン",prompt:"soft beige brown hair"},
+  {id:"hc15",name:"ミルクティーベージュ",prompt:"muted milk tea beige hair"},
+  {id:"hc16",name:"サンドベージュ",prompt:"soft sandy beige hair"},
+  {id:"hc17",name:"ハニーベージュ",prompt:"muted honey beige hair"},
+  {id:"hc18",name:"シャンパンベージュ",prompt:"pale champagne beige hair"},
+  {id:"hc19",name:"プラチナブロンド",prompt:"pale platinum blonde hair"},
+  {id:"hc20",name:"ホワイトブロンド",prompt:"soft white blonde hair"},
+  {id:"hc21",name:"シルバーグレー",prompt:"muted silver gray hair"},
+  {id:"hc22",name:"ダークシルバー",prompt:"deep smoky silver hair"},
+  {id:"hc23",name:"スモーキーグレー",prompt:"soft smoky gray hair"},
+  {id:"hc24",name:"ペールグレー",prompt:"pale cool gray hair"},
+  {id:"hc25",name:"アッシュブロンド",prompt:"cool ash blonde hair"},
+  {id:"hc26",name:"アイスブロンド",prompt:"icy pale blonde hair"},
+  {id:"hc27",name:"スモーキーブルー",prompt:"muted smoky blue hair"},
+  {id:"hc28",name:"アッシュブルー",prompt:"pale ash blue hair"},
+  {id:"hc29",name:"ペールブルー",prompt:"soft pale blue hair"},
+  {id:"hc30",name:"スチールブルー",prompt:"muted steel blue hair"},
+  {id:"hc31",name:"ネイビーブルー",prompt:"deep muted navy blue hair"},
+  {id:"hc32",name:"ブルーグレー",prompt:"soft blue-gray hair"},
+  {id:"hc33",name:"ラベンダーグレー",prompt:"muted lavender gray hair"},
+  {id:"hc34",name:"ペールラベンダー",prompt:"pale lavender hair"},
+  {id:"hc35",name:"スモーキーパープル",prompt:"smoky muted purple hair"},
+  {id:"hc36",name:"ダスティモーヴ",prompt:"muted dusty mauve hair"},
+  {id:"hc37",name:"ペールピンク",prompt:"soft pale pink hair"},
+  {id:"hc38",name:"ダスティピンク",prompt:"soft dusty pink hair"},
+  {id:"hc39",name:"ローズブラウン",prompt:"muted rose brown hair"},
+  {id:"hc40",name:"スモーキーローズ",prompt:"smoky muted rose hair"},
+  {id:"hc41",name:"ワインレッド",prompt:"deep muted wine red hair"},
+  {id:"hc42",name:"ボルドー",prompt:"dark burgundy hair"},
+  {id:"hc43",name:"カシス",prompt:"muted blackcurrant purple hair"},
+  {id:"hc44",name:"チェリーブラウン",prompt:"deep cherry brown hair"},
+  {id:"hc45",name:"カッパーブラウン",prompt:"muted copper brown hair"},
+  {id:"hc46",name:"アッシュオリーブ",prompt:"muted ash olive hair"},
+  {id:"hc47",name:"セージグリーン",prompt:"soft muted sage green hair"},
+  {id:"hc48",name:"ミントグレー",prompt:"pale muted mint gray hair"},
+  {id:"hc49",name:"ティールグレー",prompt:"muted teal gray hair"},
+  {id:"hc50",name:"ペールミント",prompt:"soft pale mint hair"},
+  {id:"hc51",name:"ブラック→シルバーグラデ",prompt:"black hair gradually fading into silver gray at the ends"},
+  {id:"hc52",name:"ダークブラウン→ベージュグラデ",prompt:"dark brown hair with a soft beige gradient toward the ends"},
+  {id:"hc53",name:"アッシュブラウン→グレージュ",prompt:"ash brown hair fading into cool greige at the tips"},
+  {id:"hc54",name:"ブルーブラック→ブルー",prompt:"blue-black hair with a subtle deep blue gradient"},
+  {id:"hc55",name:"シルバー→ラベンダー",prompt:"silver gray hair with a pale lavender gradient at the ends"},
+  {id:"hc56",name:"プラチナ→ペールブルー",prompt:"platinum blonde hair fading into pale icy blue"},
+  {id:"hc57",name:"グレージュ→スモーキーピンク",prompt:"greige hair with a muted smoky pink gradient"},
+  {id:"hc58",name:"ブラック→ワインレッド",prompt:"black hair fading into deep wine red at the ends"},
+  {id:"hc59",name:"ブラック＋シルバーインナー",prompt:"natural black hair with hidden silver gray inner-color sections"},
+  {id:"hc60",name:"アッシュ＋ブルーインナー",prompt:"ash brown hair with muted blue inner-color sections"},
+  {id:"hc61",name:"ベージュ＋ラベンダーインナー",prompt:"beige hair with pale lavender inner-color sections"},
+  {id:"hc62",name:"シルバー＋ブルーの毛先",prompt:"silver gray hair with distinct muted blue tips"},
+  {id:"hc63",name:"ダークカラー＋淡色フェイスフレーミング",prompt:"dark hair with subtle pale face-framing highlights"},
+  {id:"hc64",name:"プラチナ＋グレージュのツートーン",prompt:"platinum beige and cool greige two-tone hair"},
+  {id:"hc65",name:"ブラック＋ブルーのツートーン",prompt:"black hair with muted blue two-tone sections"},
+  {id:"hc66",name:"ブラウン＋ローズのツートーン",prompt:"soft brown hair with dusty rose two-tone sections"},
+  {id:"hc67",name:"シルバー＋ラベンダーのツートーン",prompt:"silver gray hair with pale lavender two-tone sections"},
+  {id:"hc68",name:"ミルクティー→ピンクグラデ",prompt:"milk tea beige hair fading into dusty pink at the ends"},
+  {id:"hc69",name:"ネイビー→パープルグラデ",prompt:"deep navy hair fading into smoky purple at the ends"},
+  {id:"hc70",name:"アッシュオリーブ→ベージュグラデ",prompt:"ash olive hair fading into muted beige at the ends"}
 ],
-hairstyle:[
- ["ふわふわマッシュ","a soft fluffy mash haircut, airy rounded silhouette and separated fringe"],
- ["重めマッシュ","a full rounded mash haircut, dense straight fringe and curved sides"],
- ["マッシュウルフ","a mash wolf cut, rounded crown, layered sides and long nape"],
- ["無造作ショート","a casually tousled short haircut with loose textured layers"],
- ["束感ショート","a short textured haircut with separated piecey strands"],
- ["ベリーショート","a neat very short haircut, close-cropped sides and textured top"],
- ["クロップカット","a modern crop haircut, short textured top and compact straight fringe"],
- ["ツーブロック","a layered two-block haircut, short sides and longer textured top"],
- ["刈り上げショート","a clean undercut with a softly textured top and tapered sides"],
- ["七三サイドパート","a neat side-parted hairstyle with diagonal fringe"],
- ["センターパート","a relaxed center-parted hairstyle with long soft face-framing bangs"],
- ["カーテンバング","soft curtain bangs parted loosely, face-framing layers and natural volume"],
- ["前下がりショート","a forward-sloping short haircut, longer front strands and clean nape"],
- ["前下がりボブ","a masculine forward-sloping bob with layered ends"],
- ["ウルフカット","a layered wolf cut, textured crown, long nape and feathered fringe"],
- ["ネオウルフ","a modern soft wolf cut with airy crown layers and wispy long nape"],
- ["ハッシュカット","a soft hush cut with face-framing layers and feathered ends"],
- ["シャギーミディアム","a shaggy medium haircut with choppy layers and airy ends"],
- ["レイヤーミディアム","medium-length layered hair with soft movement"],
- ["外ハネミディアム","a medium layered hairstyle with softly flipped-out ends"],
- ["くせ毛ウェーブ","naturally wavy medium-length hair with loose curls"],
- ["ゆるいパーマ","a loose perm with soft flowing waves and textured volume"],
- ["強めカール","defined loose curls with abundant texture and rounded volume"],
- ["さらさらストレート","smooth straight hair with a clean silhouette and delicate bangs"],
- ["目隠れヘア","long asymmetrical fringe partially covering one eye"],
- ["重め長めバング","long heavy fringe grazing the eyebrows"],
- ["シースルーバング","light see-through fringe with separated wispy strands"],
- ["アシンメトリー","an asymmetrical haircut with uneven fringe lengths"],
- ["長髪ストレート","long straight hair falling past the shoulders"],
- ["ロングレイヤー","long layered hair with flowing movement and tapered ends"],
- ["低い位置でひとつ結び","long hair tied loosely in a low ponytail"],
- ["ハーフアップ","medium-long hair styled in a half-up tie"],
- ["低めお団子","long hair gathered into a loose low bun"],
- ["編み込みアレンジ","long hair with subtle side braids woven into flowing layers"],
- ["オールバック","a loose swept-back hairstyle with textured volume"],
- ["かき上げ前髪","a swept-up fringe with natural lift and side volume"],
- ["長め襟足ショート","a short layered haircut with a slightly long nape"],
- ["コンマヘア","a comma hairstyle with a curved front fringe"],
- ["センター分けロング","long center-parted hair with smooth face-framing strands"],
- ["無造作ロング","loosely tousled long hair with irregular soft layers"]
-].map((x,i)=>({id:"hs"+(i+1),name:x[0],prompt:x[1]})),
+hairstyle:buildHairstyles(),
 faceShape:[
  {id:"fs1",name:"卵型",prompt:"a balanced oval face shape"},
  {id:"fs2",name:"面長",prompt:"a slightly long and elegant face shape"},
@@ -307,16 +389,46 @@ eyeShape:[
  {id:"es12",name:"知的で端正な目元",prompt:"precisely shaped almond eyes with clean eyelid definition"}
 ],
 irisColor:[
- {id:"ic1",name:"淡いブルー",prompt:"pale blue irises"},{id:"ic2",name:"アイスブルー",prompt:"icy light blue irises"},
- {id:"ic3",name:"ブルーグレー",prompt:"muted blue-gray irises"},{id:"ic4",name:"スモーキーブルー",prompt:"smoky desaturated blue irises"},
- {id:"ic5",name:"淡いグレー",prompt:"pale silver-gray irises"},{id:"ic6",name:"ダークグレー",prompt:"deep charcoal gray irises"},
- {id:"ic7",name:"グレイッシュグリーン",prompt:"muted gray-green irises"},{id:"ic8",name:"オリーブ",prompt:"muted olive-green irises"},
- {id:"ic9",name:"淡いラベンダー",prompt:"pale lavender irises"},{id:"ic10",name:"バイオレット",prompt:"muted violet irises"},
- {id:"ic11",name:"アッシュブラウン",prompt:"cool ash-brown irises"},{id:"ic12",name:"琥珀",prompt:"soft amber irises"},
- {id:"ic13",name:"淡いゴールド",prompt:"pale muted golden irises"},{id:"ic14",name:"ワインレッド",prompt:"deep muted wine-red irises"},
- {id:"ic15",name:"ダークブラウン",prompt:"deep dark brown irises"},{id:"ic16",name:"黒に近い色",prompt:"near-black irises"},
- {id:"ic17",name:"淡いピンク",prompt:"pale dusty rose irises"},{id:"ic18",name:"青緑",prompt:"muted blue-green irises"},
- {id:"ic19",name:"ヘーゼル",prompt:"soft hazel irises"},{id:"ic20",name:"左右で異なる色",prompt:"subtle heterochromia, one pale blue iris and one muted gray iris"}
+  {id:"ic1",name:"淡いブルー",prompt:"pale blue irises"},
+  {id:"ic2",name:"アイスブルー",prompt:"icy light blue irises"},
+  {id:"ic3",name:"アクアブルー",prompt:"soft clear aqua-blue irises"},
+  {id:"ic4",name:"スモーキーブルー",prompt:"smoky desaturated blue irises"},
+  {id:"ic5",name:"ブルーグレー",prompt:"muted blue-gray irises"},
+  {id:"ic6",name:"ネイビー",prompt:"deep muted navy blue irises"},
+  {id:"ic7",name:"淡いグレー",prompt:"pale silver-gray irises"},
+  {id:"ic8",name:"スチールグレー",prompt:"cool steel-gray irises"},
+  {id:"ic9",name:"チャコールグレー",prompt:"deep charcoal gray irises"},
+  {id:"ic10",name:"グレージュ",prompt:"soft gray-beige irises"},
+  {id:"ic11",name:"淡いグリーン",prompt:"pale muted green irises"},
+  {id:"ic12",name:"グレイッシュグリーン",prompt:"muted gray-green irises"},
+  {id:"ic13",name:"オリーブ",prompt:"muted olive-green irises"},
+  {id:"ic14",name:"セージグリーン",prompt:"soft sage-green irises"},
+  {id:"ic15",name:"エメラルドグリーン",prompt:"deep muted emerald-green irises"},
+  {id:"ic16",name:"青緑",prompt:"muted blue-green irises"},
+  {id:"ic17",name:"淡いラベンダー",prompt:"pale lavender irises"},
+  {id:"ic18",name:"ライラック",prompt:"soft lilac irises"},
+  {id:"ic19",name:"バイオレット",prompt:"muted violet irises"},
+  {id:"ic20",name:"ダークパープル",prompt:"deep smoky purple irises"},
+  {id:"ic21",name:"アッシュブラウン",prompt:"cool ash-brown irises"},
+  {id:"ic22",name:"ダークブラウン",prompt:"deep dark brown irises"},
+  {id:"ic23",name:"チョコレートブラウン",prompt:"soft chocolate-brown irises"},
+  {id:"ic24",name:"ヘーゼル",prompt:"soft hazel irises"},
+  {id:"ic25",name:"琥珀",prompt:"soft amber irises"},
+  {id:"ic26",name:"淡いゴールド",prompt:"pale muted golden irises"},
+  {id:"ic27",name:"ハニーゴールド",prompt:"warm honey-gold irises"},
+  {id:"ic28",name:"カッパー",prompt:"muted copper-brown irises"},
+  {id:"ic29",name:"淡いピンク",prompt:"pale dusty rose irises"},
+  {id:"ic30",name:"ローズグレー",prompt:"muted rose-gray irises"},
+  {id:"ic31",name:"ワインレッド",prompt:"deep muted wine-red irises"},
+  {id:"ic32",name:"ルビーレッド",prompt:"dark muted ruby-red irises"},
+  {id:"ic33",name:"淡いターコイズ",prompt:"pale muted turquoise irises"},
+  {id:"ic34",name:"ティール",prompt:"deep muted teal irises"},
+  {id:"ic35",name:"淡いオレンジ",prompt:"soft muted apricot-orange irises"},
+  {id:"ic36",name:"白銀",prompt:"pale icy silver irises"},
+  {id:"ic37",name:"黒に近い色",prompt:"near-black irises"},
+  {id:"ic38",name:"赤みのあるブラウン",prompt:"warm reddish-brown irises"},
+  {id:"ic39",name:"淡いモーヴ",prompt:"pale muted mauve irises"},
+  {id:"ic40",name:"左右で異なる色",prompt:"subtle heterochromia, one pale blue iris and one muted gray iris"}
 ],
 build:[
  {id:"b1",name:"細身・華奢",prompt:"a slender delicate build, narrow shoulders and long limbs"},
@@ -401,7 +513,7 @@ for(const [style,stylePrompt] of MODERN_STYLES) for(const [look,lookPrompt] of M
 const CATEGORY_META = [
  {key:"world",title:"世界観・ジャンル",note:"服装候補と連動"},
  {key:"hairColor",title:"髪色",note:"色味のみ"},
- {key:"hairstyle",title:"髪型",note:"シルエット・前髪・襟足を統合"},
+ {key:"hairstyle",title:"髪型",note:"長さ・カット・前髪・質感を組み合わせた完成形"},
  {key:"faceShape",title:"顔の輪郭・骨格",note:"輪郭と顔全体の骨格"},
  {key:"eyeShape",title:"目の形",note:"目元の形・まぶた"},
  {key:"irisColor",title:"瞳の色",note:"色だけを独立して抽選"},
@@ -409,17 +521,25 @@ const CATEGORY_META = [
  {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
  {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
 ];
-const STORAGE_KEY="ikemen-gacha-v4";
+const STORAGE_KEY="ikemen-gacha-v6";
 let catalog, selected={}, locked={}, editing=null;
 const $=s=>document.querySelector(s);
 const clone=obj=>JSON.parse(JSON.stringify(obj));
 const uid=()=> "custom_"+Math.random().toString(36).slice(2,10);
 function load(){
  try{
-  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+  let raw=localStorage.getItem(STORAGE_KEY);
+  const migrating=!raw;
+  if(migrating)raw=localStorage.getItem("ikemen-gacha-v5");
+  const saved=JSON.parse(raw);
   catalog=saved?.catalog||clone(DEFAULTS);
   selected=saved?.selected||{};
   locked=saved?.locked||{};
+  if(migrating && Array.isArray(catalog.hairstyle)){
+   const customHair=catalog.hairstyle.filter(x=>String(x.id).startsWith("custom_"));
+   catalog.hairstyle=[...clone(DEFAULTS.hairstyle),...customHair];
+   selected.hairstyle=null;
+  }
  }catch(e){catalog=clone(DEFAULTS);selected={};locked={};}
  for(const c of CATEGORY_META){
   if(!Array.isArray(catalog[c.key]))catalog[c.key]=clone(DEFAULTS[c.key]);
@@ -508,22 +628,26 @@ function updatePrompts(){
  $("#negative").value=negativeText();
 }
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function render(){
- const grid=$("#categoryGrid");
- grid.innerHTML=CATEGORY_META.map((meta,i)=>{
-  const list=catalog[meta.key],cur=item(meta.key),isLock=locked[meta.key];
-  const candidates=list.map(c=>`
+function renderCandidateList(key){
+ const list=catalog[key];
+ const candidates=list.map(c=>`
    <div class="candidate">
     <div class="candidate-main">
      <div class="candidate-name">${escapeHTML(c.name)}</div>
      <div class="candidate-prompt">${escapeHTML(c.prompt)}</div>
     </div>
     <div class="candidate-actions">
-     <button data-use="${meta.key}" data-id="${c.id}">選ぶ</button>
-     <button data-edit="${meta.key}" data-id="${c.id}">編集</button>
-     <button data-delete="${meta.key}" data-id="${c.id}" aria-label="削除">削除</button>
+     <button data-use="${key}" data-id="${c.id}">選ぶ</button>
+     <button data-edit="${key}" data-id="${c.id}">編集</button>
+     <button data-delete="${key}" data-id="${c.id}" aria-label="削除">削除</button>
     </div>
    </div>`).join("");
+ return `<button class="btn small" data-add="${key}">＋ 候補を追加</button>${candidates||'<p class="empty">候補がありません。</p>'}`;
+}
+function render(){
+ const grid=$("#categoryGrid");
+ grid.innerHTML=CATEGORY_META.map((meta,i)=>{
+  const list=catalog[meta.key],cur=item(meta.key),isLock=locked[meta.key];
   return `<section class="category-card" data-category="${meta.key}">
    <div class="card-head">
     <div class="card-title"><span class="num">${String(i+1).padStart(2,"0")}</span>${meta.title}</div>
@@ -535,9 +659,17 @@ function render(){
    <p class="result-name">${escapeHTML(cur?.name||"未選択")}</p>
    <p class="result-prompt">${escapeHTML(cur?.prompt||"")}</p>
    <div class="card-foot"><span class="count">${list.length}候補 · ${escapeHTML(meta.note)}</span></div>
-   <details><summary>候補一覧・編集</summary><div class="candidate-list"><button class="btn small" data-add="${meta.key}">＋ 候補を追加</button>${candidates||'<p class="empty">候補がありません。</p>'}</div></details>
+   <details data-candidates="${meta.key}"><summary>候補一覧・編集</summary><div class="candidate-list"></div></details>
   </section>`;
  }).join("");
+ grid.querySelectorAll("details[data-candidates]").forEach(details=>{
+  details.addEventListener("toggle",()=>{
+   if(details.open && !details.dataset.loaded){
+    details.querySelector(".candidate-list").innerHTML=renderCandidateList(details.dataset.candidates);
+    details.dataset.loaded="true";
+   }
+  });
+ });
  updatePrompts();
 }
 function toast(msg){
