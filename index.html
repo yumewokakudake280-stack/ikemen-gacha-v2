@@ -122,7 +122,8 @@ dialog::backdrop{background:#09080dbb;backdrop-filter:blur(4px)}
 
   <section class="settings">
     <span class="settings-title">プロンプト設定</span>
-    <label class="check"><input type="checkbox" id="noPiercing" checked> ピアス・タトゥーを除外</label>
+    <label class="check"><input type="checkbox" id="noPiercing" checked> ピアスを入れない</label>
+    <label class="check"><input type="checkbox" id="noTattoo" checked> タトゥーを入れない</label>
     <label class="check"><input type="checkbox" id="noHighlights"> 瞳のハイライトを入れない</label>
   </section>
 
@@ -138,8 +139,6 @@ dialog::backdrop{background:#09080dbb;backdrop-filter:blur(4px)}
     </div>
     <div class="field-label"><span>Positive prompt</span><button class="btn small" id="copyPositive">コピー</button></div>
     <textarea id="positive" spellcheck="false"></textarea>
-    <div class="field-label"><span>Negative prompt</span><button class="btn small" id="copyNegative">コピー</button></div>
-    <textarea id="negative" spellcheck="false"></textarea>
     <div class="output-actions">
     </div>
   </section>
@@ -195,86 +194,94 @@ const GROUPS = [
 ];
 
 
+
 function buildHairstyles(){
- const bases = [
-  {group:"ショート",items:[
-   ["ふわふわマッシュ","a fluffy rounded mash haircut with airy crown volume and a softly tapered nape"],
-   ["重めマッシュ","a full compact mash haircut with a dense rounded silhouette and softly curved sides"],
-   ["レイヤーショート","a short layered haircut with a clean outline and naturally feathered sides"],
-   ["ツーブロックショート","a modern two-block short haircut with closely tapered sides and a longer top"],
-   ["ショートウルフ","a short wolf cut with layered crown volume, textured sides and a slightly longer nape"],
-   ["クロップショート","a neat textured crop haircut with a compact shape and closely tapered sides"],
-   ["アシンメトリーショート","an asymmetrical short haircut with uneven side lengths and a distinct angular silhouette"]
-  ]},
-  {group:"ミディアム",items:[
-   ["レイヤーミディアム","a medium-length layered haircut with flowing face-framing layers and balanced volume"],
-   ["ミディアムウルフ","a medium wolf cut with a layered crown, feathered sides and a longer nape"],
-   ["シャギーミディアム","a medium shag haircut with airy choppy layers and feathered ends"],
-   ["ハッシュカット","a soft hush cut with delicate face-framing layers and naturally tapered ends"],
-   ["ナチュラルボブ","a softly rounded jaw-to-neck-length bob with a clean balanced outline"],
-   ["前下がりボブ","a graduated forward-sloping bob with longer front sections and a neat nape"],
-   ["アシンメトリーミディアム","an asymmetrical medium haircut with uneven lengths and softly layered movement"]
-  ]},
-  {group:"ロング",items:[
-   ["ロングレイヤー","long layered hair with flowing face-framing sections and tapered ends"],
-   ["ロングウルフ","a long wolf cut with a layered crown, feathered sides and a long textured nape"],
-   ["ロングストレート","long hair with a clean straight silhouette falling past the shoulders"],
-   ["ロングシャギー","long shaggy hair with airy cascading layers and feathered ends"],
-   ["ロングハッシュレイヤー","long hush-cut layers framing the face with soft flowing lengths"],
-   ["ロングハーフアップ","long layered hair gathered in a half-up style with flowing lengths below"],
-   ["ロングローポニー","long hair gathered into a relaxed low ponytail with a soft, natural silhouette"]
-  ]}
+ const styles=[
+  ["ふわふわマッシュ","fluffy rounded mash haircut with airy crown volume and a softly tapered nape",
+   ["自然なフルバング|a soft natural full fringe","束感バング|lightly separated textured fringe","ラウンドバング|a softly rounded fringe"],
+   ["エアリー|airy feathered texture with soft movement","柔らかい毛流れ|soft natural strands with gentle movement","ふんわり|light fluffy volume throughout"]],
+  ["重めマッシュ","full compact mash haircut with a dense rounded silhouette and curved sides",
+   ["重めフルバング|a dense full fringe softly covering the forehead","ラウンドバング|a rounded fringe following the brow line","長めの束感バング|long separated fringe pieces"],
+   ["まとまりのある質感|smooth compact texture with neatly arranged strands","自然な毛流れ|soft natural strand definition"]],
+  ["軽めマッシュ","light layered mash haircut with an airy rounded shape and feathered ends",
+   ["薄めバング|a light wispy fringe","束感バング|separated feathered fringe","斜めバング|a soft diagonal side-swept fringe"],
+   ["エアリー|airy feathered texture","柔らかな毛流れ|soft natural movement","ラフな束感|casually separated textured locks"]],
+  ["ショートレイヤー","short layered haircut with a clean tapered outline and natural crown volume",
+   ["アップバング|front hair swept upward","サイドに流す|a side-swept front","短い束感バング|short separated fringe"],
+   ["ドライな束感|defined dry texture with separated locks","ナチュラル|natural soft texture","軽い動き|lightly tousled movement"]],
+  ["ツーブロックショート","two-block short haircut with closely tapered sides and a longer textured top",
+   ["アップバング|front hair swept upward","七三サイドパート|a neat  side part","コンマバング|curved comma-shaped front locks"],
+   ["立体的な束感|defined textured locks with controlled volume","なめらかな毛流れ|smooth controlled direction","ラフな質感|casually tousled texture"]],
+  ["ショートウルフ","short wolf cut with layered crown volume, textured sides and a longer nape",
+   ["長めの束感バング|long separated fringe pieces","センターパート|a soft center part","サイドパート|a relaxed side part"],
+   ["軽いレイヤー|light feathered layers","ラフな束感|piecey textured movement","自然な毛流れ|soft natural flow"]],
+  ["クロップショート","textured crop haircut with a compact shape and closely tapered sides",
+   ["短いフルバング|a short cropped fringe","シーザーバング|a short forward-brushed fringe"],
+   ["マットな質感|matte textured finish","細かな束感|short defined texture"]],
+  ["レイヤーミディアム","medium layered haircut with flowing face-framing layers and balanced volume",
+   ["センターパート|a relaxed center part with face-framing sections","サイドパート|a natural side part","カーテンバング|curtain bangs blending into the sides"],
+   ["柔らかな毛流れ|soft flowing strands","ゆるいウェーブ|loose natural waves","なめらかなストレート|smooth straight strands with subtle movement"]],
+  ["ミディアムウルフ","medium wolf cut with a layered crown, feathered sides and a longer nape",
+   ["センターパート|a relaxed center part","長めの束感バング|long separated front pieces","サイドに流す|a soft side-swept fringe"],
+   ["シャギーな動き|shaggy feathered texture","ゆるいウェーブ|loose flowing waves","ラフな束感|piecey layered movement"]],
+  ["シャギーミディアム","medium shag haircut with airy choppy layers and feathered ends",
+   ["長めの束感バング|long piecey fringe","カーテンバング|curtain bangs","サイドパート|a relaxed side part"],
+   ["エアリー|airy choppy texture","ゆるいウェーブ|loose soft waves","ラフな動き|casually tousled movement"]],
+  ["ハッシュカット","soft hush cut with delicate face-framing layers and tapered ends",
+   ["シースルーバング|a light see-through fringe","カーテンバング|soft curtain bangs","長めセンターパート|long center-parted front sections"],
+   ["柔らかな毛流れ|soft flowing strands","なめらかなストレート|smooth straight texture","毛先の自然な動き|subtle movement at the ends"]],
+  ["ナチュラルボブ","softly rounded jaw-to-neck-length bob with a clean balanced outline",
+   ["自然なフルバング|a soft full fringe","センターパート|a neat center part","サイドパート|a gentle side part"],
+   ["なめらかなストレート|smooth straight strands","内巻き|soft inward-curving ends","自然な丸み|a naturally rounded finish"]],
+  ["前下がりボブ","graduated forward-sloping bob with longer front sections and a neat nape",
+   ["長めセンターパート|long center-parted front sections","サイドパート|a side part following the longer front","前髪なし|no distinct fringe, with the forehead softly exposed"],
+   ["なめらかなストレート|sleek straight strands","毛先の自然な動き|subtle movement at the ends"]],
+  ["アシンメトリーミディアム","asymmetrical medium haircut with uneven lengths and layered movement",
+   ["深めサイドパート|a deep side part","長めの斜めバング|a long diagonal fringe","片側に流す|front sections swept to one side"],
+   ["なめらかな毛流れ|smooth directional flow","軽いレイヤー|light layered texture","ゆるいウェーブ|loose waves"]],
+  ["ロングレイヤー","long layered hair with flowing face-framing sections and tapered ends",
+   ["センターパート|a center part with long face-framing sections","カーテンバング|long curtain bangs","サイドパート|a soft side part"],
+   ["なめらかなストレート|smooth flowing straight strands","ゆるいウェーブ|loose flowing waves","大きなゆるいカール|large soft curls"]],
+  ["ロングウルフ","long wolf cut with a layered crown, feathered sides and a long textured nape",
+   ["センターパート|a center part","長めの束感バング|long piecey fringe","カーテンバング|curtain bangs"],
+   ["シャギーな動き|shaggy feathered texture","ゆるいウェーブ|loose waves","レイヤーの束感|defined layered texture"]],
+  ["ロングストレート","long hair with a clean straight silhouette falling past the shoulders",
+   ["センターパート|a clean center part","長めカーテンバング|long curtain bangs","前髪なし|no distinct fringe, forehead softly exposed"],
+   ["絹のようなストレート|silky straight strands","自然なストレート|soft naturally straight strands"]],
+  ["ロングウェーブ","long layered hair with soft flowing waves and a graceful silhouette",
+   ["センターパート|a center part","カーテンバング|long curtain bangs","サイドに流す|a side-swept fringe"],
+   ["ゆるいウェーブ|loose flowing waves","大きなゆるいカール|large soft curls","柔らかなウェーブ|soft relaxed waves"]],
+  ["ロングハーフアップ","long hair styled half-up with loose flowing lengths",
+   ["センターパート|a center part","カーテンバング|curtain bangs","顔周りの後れ毛|loose face-framing strands"],
+   ["なめらかなストレート|smooth straight lengths","ゆるいウェーブ|loose waves"]],
+  ["ローポニー","long hair gathered into a relaxed low ponytail",
+   ["センターパート|a center part","サイドパート|a side part","顔周りの後れ毛|loose face-framing strands"],
+   ["なめらかな毛流れ|smooth sleek strands","自然なウェーブ|soft natural waves"]],
+  ["低めのお団子","long hair gathered into a loose low bun with a soft nape",
+   ["センターパート|a center part","サイドパート|a side part","顔周りの後れ毛|loose face-framing strands"],
+   ["すっきりしたまとめ髪|neatly gathered hair with a few soft loose strands","柔らかな後れ毛|soft wispy strands around the face"]],
+  ["コンマヘア","short-to-medium comma hairstyle with curved front locks and a softly layered crown",
+   ["コンマバング|distinct curved comma-shaped front locks"],
+   ["自然な毛流れ|soft natural flow","なめらかな質感|smooth controlled texture"]],
+  ["アップバングショート","short haircut with the front swept upward, open forehead and textured crown",
+   ["アップバング|front hair swept upward and away from the forehead"],
+   ["立体的な束感|defined textured locks","ナチュラル|natural soft texture"]],
+  ["オールバック","hair swept back from the forehead with a clean, controlled silhouette",
+   ["オールバック|all front hair swept back, forehead fully exposed"],
+   ["なめらかな毛流れ|smooth sleek direction","自然なボリューム|natural controlled volume"]]
  ];
- const fringes = {
-  "ショート":[
-   ["自然なフルバング","a naturally full fringe softly covering the forehead"],
-   ["束感のある前髪","lightly separated textured fringe with delicate individual locks"],
-   ["サイドに流した前髪","a soft side-swept fringe blending into the temples"],
-   ["センターパート","a relaxed center part with softly divided front sections"],
-   ["コンマバング","curved comma-shaped front locks framing the forehead"],
-   ["アップバング","the front hair swept upward to reveal the forehead"]
-  ],
-  "ミディアム":[
-   ["自然なフルバング","a soft natural fringe gently framing the eyebrows"],
-   ["カーテンバング","curtain bangs parted in the center and flowing along the temples"],
-   ["センターパート","a relaxed center part with long face-framing front sections"],
-   ["サイドパート","a natural side part with a diagonal sweep across the forehead"],
-   ["コンマバング","soft comma-shaped front locks curving gently over the forehead"],
-   ["かき上げ前髪","the front hair casually swept up and away from the face"]
-  ],
-  "ロング":[
-   ["長めカーテンバング","long curtain bangs parted at the center and blending into the sides"],
-   ["ロングセンターパート","a center part with long flowing face-framing sections"],
-   ["サイドに流した前髪","long side-swept front sections softly framing one side of the face"],
-   ["柔らかなフルバング","a soft full fringe delicately framing the forehead"],
-   ["フェイスフレーミング","long face-framing layers with no distinct blunt fringe"],
-   ["額を出したスタイル","the front hair swept gently away from the face, leaving the forehead open"]
-  ]
- };
- const textures = [
-  ["なめらかなストレート","smooth silky straight strands with a sleek natural finish"],
-  ["柔らかなナチュラルストレート","soft naturally straight hair with subtle volume and gentle movement"],
-  ["ゆるいウェーブ","loose natural waves flowing softly through the lengths"],
-  ["エアリーな束感","airy separated layers with soft piecey texture and light movement"],
-  ["柔らかなカール","soft loose curls with natural volume and delicate definition"]
- ];
- const result=[];
- let n=0;
- for(const base of bases){
-  for(const [baseName,basePrompt] of base.items){
-   for(const [fringeName,fringePrompt] of fringes[base.group]){
-    for(const [textureName,texturePrompt] of textures){
-     n++;
-     result.push({
-      id:"hs_combo_"+n,
-      name:baseName+" × "+fringeName+" × "+textureName,
-      prompt:basePrompt+", "+fringePrompt+", "+texturePrompt
-     });
-    }
+ const out=[]; let id=0;
+ for(const [name,base,fringes,finishes] of styles){
+  for(const fringe of fringes){
+   for(const finish of finishes){
+    const [fn,fp]=fringe.split("|"),[tn,tp]=finish.split("|");
+    id++;
+    out.push({id:"hs_curated_"+id,name:name+"・"+fn+"・"+tn,
+      prompt:base+", "+fp+", "+tp});
    }
   }
  }
- return result;
+ return out;
 }
 
 const DEFAULTS = {
@@ -521,7 +528,7 @@ const CATEGORY_META = [
  {key:"outfit",title:"服装",note:"世界観に合う候補のみ抽選"},
  {key:"mood",title:"雰囲気",note:"表情・佇まい・印象"}
 ];
-const STORAGE_KEY="ikemen-gacha-v6";
+const STORAGE_KEY="ikemen-gacha-v7";
 let catalog, selected={}, locked={}, editing=null;
 const $=s=>document.querySelector(s);
 const clone=obj=>JSON.parse(JSON.stringify(obj));
@@ -614,18 +621,13 @@ function promptText(){
   "harmonious character design, cohesive styling, elegant composition"
  ].filter(Boolean);
  if($("#noHighlights").checked)parts.push("no eye highlights, no catchlights, matte irises, eyes do not reflect light");
- if($("#noPiercing").checked)parts.push("no piercings, no earrings, no tattoos");
+ if($("#noPiercing").checked)parts.push("no piercings, no earrings");
+ if($("#noTattoo").checked)parts.push("no tattoos");
  return parts.join(", ");
-}
-function negativeText(){
- const n=["worst quality","low quality","low resolution","blurry","poorly drawn face","bad anatomy","deformed body","malformed hands","extra fingers","missing fingers","extra limbs","asymmetrical eyes","text","watermark"];
- if($("#noPiercing").checked)n.push("piercings","earrings","tattoos");
- if($("#noHighlights").checked)n.push("eye highlights","catchlights","glossy eye reflections");
- return n.join(", ");
 }
 function updatePrompts(){
  $("#positive").value=promptText();
- $("#negative").value=negativeText();
+
 }
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function renderCandidateList(key){
@@ -737,10 +739,10 @@ $("#cancelEdit").addEventListener("click",closeEditor);
 $("#allRoll").addEventListener("click",randomizeAll);
 $("#unlockAll").addEventListener("click",()=>{for(const k in locked)locked[k]=false;save();render();toast("すべての固定を解除しました");});
 $("#noPiercing").addEventListener("change",updatePrompts);
+$("#noTattoo").addEventListener("change",updatePrompts);
 $("#noHighlights").addEventListener("change",updatePrompts);
 $("#copyPositive").addEventListener("click",()=>copyText($("#positive").value));
-$("#copyNegative").addEventListener("click",()=>copyText($("#negative").value));
-$("#copyAll").addEventListener("click",()=>copyText("Positive prompt:\n"+$("#positive").value+"\n\nNegative prompt:\n"+$("#negative").value));
+$("#copyAll").addEventListener("click",()=>copyText($("#positive").value));
 $("#exportBtn").addEventListener("click",()=>{
  const data={version:2,catalog,selected,locked};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
